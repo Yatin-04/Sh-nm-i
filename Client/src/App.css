@@ -1,0 +1,10 @@
+.spotifyEmbed {
+  width: 100%;
+  border: 0;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.small {
+  font-size: 12px;
+}

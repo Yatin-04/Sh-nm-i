@@ -1,0 +1,50 @@
+const productSchema = new mongoose.Schema({
+  name: { type: String, required: true, trim: true },
+  sku: { type: String, required: true, unique: true }, // The unique identifier
+  category: { type: String, required: true },
+  description: String,
+  unitOfMeasure: String, // e.g., "Box of 100", "Vial"
+  thresholdValue: { type: Number, default: 10 }, // For "Low Stock" alerts
+  totalStock: { type: Number, default: 0 } // Aggregated count of all batches
+}, { timestamps: true });
+
+
+const batchSchema = new mongoose.Schema({
+  productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+  batchNumber: { type: String, required: true },
+  quantity: { type: Number, required: true },
+  expiryDate: { type: Date, required: true },
+  status: { 
+    type: String, 
+    enum: ['Available', 'Expiring', 'Expired'], 
+    default: 'Available' 
+  }
+}, { timestamps: true });
+
+// Indexing for performance on the expiry logic
+batchSchema.index({ expiryDate: 1 });
+const productSchema = new mongoose.Schema({
+  name: { type: String, required: true, trim: true },
+  sku: { type: String, required: true, unique: true }, // The unique identifier
+  category: { type: String, required: true },
+  description: String,
+  unitOfMeasure: String, // e.g., "Box of 100", "Vial"
+  thresholdValue: { type: Number, default: 10 }, // For "Low Stock" alerts
+  totalStock: { type: Number, default: 0 } // Aggregated count of all batches
+}, { timestamps: true });
+
+
+const batchSchema = new mongoose.Schema({
+  productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+  batchNumber: { type: String, required: true },
+  quantity: { type: Number, required: true },
+  expiryDate: { type: Date, required: true },
+  status: { 
+    type: String, 
+    enum: ['Available', 'Expiring', 'Expired'], 
+    default: 'Available' 
+  }
+}, { timestamps: true });
+
+// Indexing for performance on the expiry logic
+batchSchema.index({ expiryDate: 1 });
