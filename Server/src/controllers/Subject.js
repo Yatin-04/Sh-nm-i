@@ -3,7 +3,8 @@ import { insertSubject, getSubjectsByUserId } from '../models/Subject.js';
 
 export const createSubject = async (req, res) => {
   try {
-    const { subject_name, user_id } = req.body;
+    const { subject_name } = req.body;
+    const user_id = req.user.id;
 
     // Basic validation
     if (!subject_name || !user_id) {
@@ -31,8 +32,7 @@ export const createSubject = async (req, res) => {
 
 export const getUserSubjects = async (req, res) => {
   try {
-    // Usually, this comes from the URL (e.g., /api/users/:user_id/subjects)
-    const { user_id } = req.params; 
+    const user_id = req.user.id; 
 
     const subjects = await getSubjectsByUserId(user_id);
 

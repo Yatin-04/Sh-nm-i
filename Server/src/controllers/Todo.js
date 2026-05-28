@@ -8,8 +8,10 @@ export const createTodo = async (req, res) => {
       status = false, 
       notification_enabled = false, 
       date,              // Expected format: 'YYYY-MM-DD'
-      user_id 
+ 
     } = req.body;
+
+    const user_id = req.user.id;
 
     // Basic validation
     if (!task || !user_id) {
@@ -37,7 +39,7 @@ export const createTodo = async (req, res) => {
 // (getUserTodos remains exactly the same)
 export const getUserTodos = async (req, res) => {
   try {
-    const { user_id } = req.params; 
+    const user_id = req.user.id;
     const todos = await getTodosByUserId(user_id);
     res.status(200).json({ todos });
   } catch (error) {
