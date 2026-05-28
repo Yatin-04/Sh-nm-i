@@ -1,7 +1,7 @@
 import express from 'express'
 import { z } from 'zod'
 
-import { pool } from '../db.js'
+import { query } from '../config/db.js'
 
 export const sessionsRouter = express.Router()
 
@@ -14,7 +14,7 @@ const querySchema = z.object({
 sessionsRouter.get('/', async (req, res, next) => {
   try {
     const q = querySchema.parse(req.query ?? {})
-    const result = await pool.query(
+    const result = await query(
       `
       select id, subject_id, theme_id, started_at, ended_at, duration_seconds, kind, note
       from pomodoro_sessions
@@ -44,7 +44,7 @@ const createSchema = z.object({
 sessionsRouter.post('/', async (req, res, next) => {
   try {
     const payload = createSchema.parse(req.body ?? {})
-    const created = await pool.query(
+    const created = await query(
       `
       insert into pomodoro_sessions (subject_id, theme_id, started_at, ended_at, duration_seconds, kind, note)
       values ($1, $2, $3, $4, $5, $6, $7)

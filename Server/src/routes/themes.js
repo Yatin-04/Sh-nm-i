@@ -1,13 +1,13 @@
 import express from 'express'
 import { z } from 'zod'
 
-import { pool } from '../db.js'
+import { query } from '../config/db.js'
 
 export const themesRouter = express.Router()
 
 themesRouter.get('/', async (req, res, next) => {
   try {
-    const result = await pool.query(
+    const result = await query(
       `
       select id, name, background_type, background_value, accent, spotify_embed_url, created_at
       from themes
@@ -31,7 +31,7 @@ const createThemeSchema = z.object({
 themesRouter.post('/', async (req, res, next) => {
   try {
     const payload = createThemeSchema.parse(req.body ?? {})
-    const created = await pool.query(
+    const created = await query(
       `
       insert into themes (name, background_type, background_value, accent, spotify_embed_url)
       values ($1, $2, $3, $4, $5)
@@ -58,7 +58,7 @@ themesRouter.put('/:id', async (req, res, next) => {
     const id = z.string().uuid().parse(req.params.id)
     const payload = updateThemeSchema.parse(req.body ?? {})
 
-    const current = await pool.query(
+    const current = await query(
       `
       select id, name, background_type, background_value, accent, spotify_embed_url, created_at
       from themes
@@ -69,7 +69,7 @@ themesRouter.put('/:id', async (req, res, next) => {
     if (!current.rows[0]) return res.status(404).json({ error: 'Theme not found' })
 
     const row = current.rows[0]
-    const updated = await pool.query(
+    const updated = await query(
       `
       update themes
       set

@@ -1,13 +1,13 @@
 import express from 'express'
 import { z } from 'zod'
 
-import { pool } from '../db.js'
+import { query } from '../config/db.js'
 
 export const timerSettingsRouter = express.Router()
 
 timerSettingsRouter.get('/active', async (req, res, next) => {
   try {
-    const result = await pool.query(
+    const result = await query(
       `
       select id, name, work_minutes, short_break_minutes, long_break_minutes, long_break_every, updated_at
       from timer_settings
@@ -33,7 +33,7 @@ timerSettingsRouter.put('/active', async (req, res, next) => {
   try {
     const payload = putActiveSchema.parse(req.body ?? {})
 
-    const current = await pool.query(
+    const current = await query(
       `
       select id, name, work_minutes, short_break_minutes, long_break_minutes, long_break_every
       from timer_settings
@@ -42,7 +42,7 @@ timerSettingsRouter.put('/active', async (req, res, next) => {
       `,
     )
     if (!current.rows[0]) {
-      const created = await pool.query(
+      const created = await query(
         `
         insert into timer_settings (name, work_minutes, short_break_minutes, long_break_minutes, long_break_every, is_active)
         values ($1, $2, $3, $4, $5, true)
@@ -60,7 +60,7 @@ timerSettingsRouter.put('/active', async (req, res, next) => {
     }
 
     const row = current.rows[0]
-    const updated = await pool.query(
+    const updated = await query(
       `
       update timer_settings
       set

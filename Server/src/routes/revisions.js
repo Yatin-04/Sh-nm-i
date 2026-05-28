@@ -1,7 +1,7 @@
 import express from 'express'
 import { z } from 'zod'
 
-import { pool } from '../db.js'
+import { query } from '../config/db.js'
 
 export const revisionsRouter = express.Router()
 
@@ -13,7 +13,7 @@ const querySchema = z.object({
 revisionsRouter.get('/', async (req, res, next) => {
   try {
     const q = querySchema.parse(req.query ?? {})
-    const result = await pool.query(
+    const result = await query(
       `
       select id, subject_id, topic, scheduled_at, is_done, created_at, done_at
       from revision_items
@@ -38,7 +38,7 @@ const createSchema = z.object({
 revisionsRouter.post('/', async (req, res, next) => {
   try {
     const payload = createSchema.parse(req.body ?? {})
-    const created = await pool.query(
+    const created = await query(
       `
       insert into revision_items (subject_id, topic, scheduled_at)
       values ($1, $2, $3)
@@ -64,7 +64,7 @@ revisionsRouter.patch('/:id', async (req, res, next) => {
     const id = z.string().uuid().parse(req.params.id)
     const payload = patchSchema.parse(req.body ?? {})
 
-    const current = await pool.query(
+    const current = await query(
       `
       select id, subject_id, topic, scheduled_at, is_done, created_at, done_at
       from revision_items
@@ -78,7 +78,7 @@ revisionsRouter.patch('/:id', async (req, res, next) => {
     const nextIsDone = payload.is_done ?? row.is_done
     const nextDoneAt = nextIsDone ? row.done_at ?? new Date().toISOString() : null
 
-    const updated = await pool.query(
+    const updated = await query(
       `
       update revision_items
       set

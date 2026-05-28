@@ -1,7 +1,7 @@
 import express from 'express'
 import { z } from 'zod'
 
-import { pool } from '../db.js'
+import { query } from '../config/db.js'
 
 export const todosRouter = express.Router()
 
@@ -13,7 +13,7 @@ todosRouter.get('/', async (req, res, next) => {
         ? z.string().uuid().parse(themeIdRaw)
         : null
 
-    const result = await pool.query(
+    const result = await query(
       `
       select id, text, is_done, theme_id, created_at, done_at
       from todos
@@ -36,7 +36,7 @@ const createSchema = z.object({
 todosRouter.post('/', async (req, res, next) => {
   try {
     const payload = createSchema.parse(req.body ?? {})
-    const created = await pool.query(
+    const created = await query(
       `
       insert into todos (text, theme_id)
       values ($1, $2)
@@ -61,7 +61,7 @@ todosRouter.patch('/:id', async (req, res, next) => {
     const id = z.string().uuid().parse(req.params.id)
     const payload = patchSchema.parse(req.body ?? {})
 
-    const current = await pool.query(
+    const current = await query(
       `
       select id, text, is_done, theme_id, created_at, done_at
       from todos
@@ -75,7 +75,7 @@ todosRouter.patch('/:id', async (req, res, next) => {
     const nextIsDone = payload.is_done ?? row.is_done
     const nextDoneAt = nextIsDone ? row.done_at ?? new Date().toISOString() : null
 
-    const updated = await pool.query(
+    const updated = await query(
       `
       update todos
       set

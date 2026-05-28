@@ -1,13 +1,13 @@
 import express from 'express'
 import { z } from 'zod'
 
-import { pool } from '../db.js'
+import { query } from '../config/db.js'
 
 export const subjectsRouter = express.Router()
 
 subjectsRouter.get('/', async (req, res, next) => {
   try {
-    const result = await pool.query(
+    const result = await query(
       `
       select id, name
       from subjects
@@ -27,7 +27,7 @@ const createSchema = z.object({
 subjectsRouter.post('/', async (req, res, next) => {
   try {
     const payload = createSchema.parse(req.body ?? {})
-    const created = await pool.query(
+    const created = await query(
       `
       insert into subjects (name)
       values ($1)

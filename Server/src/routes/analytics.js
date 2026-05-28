@@ -1,7 +1,7 @@
 import express from 'express'
 import { z } from 'zod'
 
-import { pool } from '../db.js'
+import { query } from '../config/db.js'
 
 export const analyticsRouter = express.Router()
 
@@ -13,7 +13,7 @@ const rangeSchema = z.object({
 analyticsRouter.get('/subject-time', async (req, res, next) => {
   try {
     const q = rangeSchema.parse(req.query ?? {})
-    const result = await pool.query(
+    const result = await query(
       `
       select
         s.id as subject_id,
@@ -40,7 +40,7 @@ analyticsRouter.get('/subject-time', async (req, res, next) => {
 analyticsRouter.get('/daily', async (req, res, next) => {
   try {
     const q = rangeSchema.parse(req.query ?? {})
-    const result = await pool.query(
+    const result = await query(
       `
       select
         date_trunc('day', started_at) as day,
