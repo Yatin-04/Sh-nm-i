@@ -9,6 +9,7 @@ import { subjectRouter } from './src/routes/Subject.js';
 import { todoRouter } from './src/routes/Todo.js';
 import { sessionRouter } from './src/routes/Session.js';
 import { analyticsRouter } from './src/routes/Analytics.js';
+import { initDB } from './src/db/initDB.js'
 
 dotenv.config()
 
@@ -16,6 +17,8 @@ const app = express()
 
 // Connect to the database and verify the connection
 connectDB()
+
+await initDB();
 
 //middlewares
 app.use(

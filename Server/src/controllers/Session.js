@@ -42,13 +42,12 @@ export const startSession = async (req, res) => {
 export const endSession = async (req, res) => {
   try {
     const { session_id } = req.params;
-    const { actual_duration } = req.body; // Expecting the client to send the calculated duration in seconds
 
-    if (actual_duration === undefined) {
-      return res.status(400).json({ error: 'actual_duration (in seconds) is required to complete the session.' });
-    }
+    // if (actual_duration === undefined) {
+    //   return res.status(400).json({ error: 'actual_duration (in seconds) is required to complete the session.' });
+    // }
 
-    const updatedSession = await completeSession(session_id, actual_duration);
+    const updatedSession = await completeSession(session_id);
 
     if (!updatedSession) {
       return res.status(404).json({ error: 'Session not found.' });

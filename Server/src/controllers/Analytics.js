@@ -10,7 +10,7 @@ export const getDashboardAnalytics = async (req, res) => {
         const pieChartQuery = `
             SELECT 
                 sub.subject_name, 
-                SUM(ses.actual_duration)::INT as total_duration
+                SUM(EXTRACT(EPOCH FROM (ses.end_time - ses.start_time)))::INT as total_duration
             FROM sessions ses
                 JOIN subjects sub ON ses.subject_id = sub.subject_id
             WHERE ses.user_id = $1 
@@ -24,7 +24,7 @@ export const getDashboardAnalytics = async (req, res) => {
             SELECT 
                 TO_CHAR(session_date, 'YYYY-MM-DD') as date, 
                 session_type, 
-                SUM(actual_duration)::INT as daily_duration
+                SUM(EXTRACT(EPOCH FROM (end_time - start_time)))::INT as daily_duration
             FROM sessions
             WHERE user_id = $1 
                 AND is_completed = TRUE
@@ -50,8 +50,8 @@ export const getDashboardAnalytics = async (req, res) => {
         const kpiQuery = `
             SELECT 
                 COUNT(session_id)::INT as sessions_completed,
-                COALESCE(SUM(CASE WHEN session_type = 'focus' THEN actual_duration ELSE 0 END), 0)::INT as total_focus_time,
-                COALESCE(ROUND(AVG(CASE WHEN session_type = 'focus' THEN actual_duration END)), 0)::INT as average_session_time
+                COALESCE(SUM(CASE WHEN session_type = 'focus' THEN EXTRACT(EPOCH FROM (end_time - start_time)) ELSE 0 END), 0)::INT as total_focus_time,
+                COALESCE(ROUND(AVG(CASE WHEN session_type = 'focus' THEN EXTRACT(EPOCH FROM (end_time - start_time)) END)), 0)::INT as average_session_time
             FROM sessions
             WHERE user_id = $1 
                 AND is_completed = TRUE 
@@ -68,7 +68,7 @@ export const getDashboardAnalytics = async (req, res) => {
                 AND ses.session_type = 'focus'
                 AND ses.session_date >= CURRENT_DATE - INTERVAL '6 days'
             GROUP BY sub.subject_name
-            ORDER BY SUM(ses.actual_duration) DESC
+            ORDER BY SUM(EXTRACT(EPOCH FROM (ses.end_time - ses.start_time))) DESC
             LIMIT 1;
         `;
 

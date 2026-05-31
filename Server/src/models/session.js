@@ -1,5 +1,5 @@
 // models/Session.js
-import { query } from '../db.js';
+import { query } from '../config/db.js';
 
 export const createSessionTable = async () => {
   const sql = `
@@ -11,7 +11,6 @@ export const createSessionTable = async () => {
       planned_duration INTEGER DEFAULT 0,              
       start_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       end_time TIMESTAMP,
-      actual_duration INTEGER DEFAULT 0,
       session_type VARCHAR(20) NOT NULL CHECK (session_type IN ('focus', 'break')),
       is_completed BOOLEAN DEFAULT FALSE,
       
@@ -51,17 +50,16 @@ export const insertSession = async (subjectId, sessionType, sessionDate, planned
 };
 
 // (completeSession and getSessionsBySubjectId remain exactly the same)
-export const completeSession = async (sessionId, durationInSeconds) => {
+export const completeSession = async (sessionId) => {
   const sql = `
     UPDATE sessions 
     SET 
       end_time = CURRENT_TIMESTAMP,
-      actual_duration = $1,
       is_completed = TRUE
-    WHERE session_id = $2
+    WHERE session_id = $1
     RETURNING *;
   `;
-  const { rows } = await query(sql, [durationInSeconds, sessionId]);
+  const { rows } = await query(sql, [sessionId]);
   return rows[0];
 };
 

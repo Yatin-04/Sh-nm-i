@@ -8,7 +8,6 @@ export const createTodo = async (req, res) => {
       status = false, 
       notification_enabled = false, 
       date,              // Expected format: 'YYYY-MM-DD'
- 
     } = req.body;
 
     const user_id = req.user.id;

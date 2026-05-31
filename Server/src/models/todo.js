@@ -1,5 +1,5 @@
 // models/Todo.js
-import { query } from '../db.js';
+import { query } from '../config/db.js';
 
 // 1. Function to create the table
 export const createTodoTable = async () => {
