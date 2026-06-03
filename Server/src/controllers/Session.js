@@ -12,7 +12,7 @@ export const startSession = async (req, res) => {
     } = req.body;
     
     // Extract the user_id from the decoded JWT
-    const user_id = req.user.id;
+    const user_id = req.user.id; 
 
     if (!subject_id || !session_type) {
       return res.status(400).json({ error: 'subject_id and session_type are required.' });

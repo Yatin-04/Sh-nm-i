@@ -47,3 +47,6 @@ export const todoModel = {
     return pool.query(`delete from todos where id = $1`, [id])
   },
 }
+
+
+

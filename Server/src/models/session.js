@@ -1,5 +1,5 @@
 // models/Session.js
-import { query } from '../db.js';
+import { query } from '../config/db.js';
 
 export const createSessionTable = async () => {
   const sql = `

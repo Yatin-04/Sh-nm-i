@@ -1,5 +1,5 @@
 // User.js
-import { query } from './db.js';
+import { query } from '../config/db.js';
 import bcrypt from 'bcrypt';
 
 // 1. Function to create the table (you can run this once on startup)
