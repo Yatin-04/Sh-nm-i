@@ -52,18 +52,18 @@ const timerSlice = createSlice({
             }
         },
 
-        // Focus interval ended naturally → switch to break
+        // Focus interval ended naturally → set up break but PAUSED (awaiting user input)
         focusEnded(state) {
-            state.mode = "break";
+            state.mode = "paused_break";
             state.remainingSeconds = state.breakDuration;
-            state.intervalStartedAt = Date.now();
+            state.intervalStartedAt = null;
         },
 
-        // Break interval ended naturally → switch back to focus
+        // Break interval ended naturally → set up focus but PAUSED (awaiting user input)
         breakEnded(state) {
-            state.mode = "focus";
+            state.mode = "paused_focus";
             state.remainingSeconds = state.focusDuration;
-            state.intervalStartedAt = Date.now();
+            state.intervalStartedAt = null;
         },
 
         // Play/Pause toggle
@@ -88,7 +88,7 @@ const timerSlice = createSlice({
         },
 
         // Stop — resets everything; elapsedFocusSeconds is read BEFORE this dispatch
-        sessionStopped(state) {
+        sessionStopped() {
             return { ...initialState };
         },
 

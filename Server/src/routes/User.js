@@ -1,9 +1,12 @@
 import express from 'express';
-import { register, login } from '../controllers/Auth.js'; // Adjust path if your controllers folder is named differently
+import { register, login, me, logout } from '../controllers/Auth.js';
+import { auth } from '../middlewares/auth.js';
 
 const router = express.Router();
 
 router.post('/register', register);
 router.post('/login', login);
+router.get('/me', auth, me);
+router.post('/logout', auth, logout);
 
 export { router as authRouter };

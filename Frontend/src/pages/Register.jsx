@@ -25,7 +25,7 @@ export default function Register() {
 
         try {
             const data = await signup(formData);
-            dispatch(setAuth({ user_id: data.user_id }));
+            dispatch(setAuth({ user_id: data.user_id, name: formData.name, email: formData.email }));
             navigate("/dashboard");
         } catch (err) {
             setError(err?.data?.error || "Something went wrong. Please try again.");

@@ -55,3 +55,10 @@ export const findUserByEmail = async (email) => {
   // Return the user if found, otherwise return null
   return rows.length > 0 ? rows[0] : null; 
 };
+
+// Function to find a user by ID (for session validation)
+export const findUserById = async (userId) => {
+  const sql = `SELECT user_id, name, email FROM users WHERE user_id = $1;`;
+  const { rows } = await query(sql, [userId]);
+  return rows.length > 0 ? rows[0] : null;
+};

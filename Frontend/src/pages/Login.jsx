@@ -24,10 +24,9 @@ export default function Login() {
         setError(null);
 
         try {
-            const data = await login(formData.email, formData.password, navigate);
-            // Dispatch setAuth before navigate (navigate is called inside login())
-            // so we dispatch first using the returned data
-            dispatch(setAuth({ user_id: data.user_id }));
+            const data = await login(formData.email, formData.password);
+            dispatch(setAuth({ user_id: data.user_id, name: data.name, email: data.email }));
+            navigate("/dashboard");
         } catch (err) {
             setError(err?.data?.error || "Something went wrong. Please try again.");
         } finally {

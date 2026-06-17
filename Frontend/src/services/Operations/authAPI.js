@@ -1,10 +1,7 @@
 import { apiConnector } from "../apiConnector";
 import { endpoints } from "../api";
 
-const { SIGNUP_API, LOGIN_API } = endpoints;
-
-// Tells the browser to send/receive cookies on cross-origin requests
-const CRED_HEADERS = { credentials: "include" };
+const { SIGNUP_API, LOGIN_API, ME_API, LOGOUT_API } = endpoints;
 
 // ─────────────────────────────────────────────
 //  SIGNUP
@@ -13,14 +10,13 @@ const CRED_HEADERS = { credentials: "include" };
 // ─────────────────────────────────────────────
 export async function signup(formData) {
     try {
-        const data = await apiConnector("POST", SIGNUP_API, formData, CRED_HEADERS);
+        const data = await apiConnector("POST", SIGNUP_API, formData);
 
         console.log("SIGNUP API RESPONSE:", data);
         // data = { message: "Registration successful", user_id: "..." }
 
         return data;
     } catch (error) {
-        // error = { status, statusText, data: { error: "..." } }
         console.error("SIGNUP ERROR:", error);
         throw error;
     }
@@ -30,41 +26,46 @@ export async function signup(formData) {
 //  LOGIN
 //  POST /auth/login → { message, user_id }
 //  JWT is set as httpOnly cookie by the server automatically.
-//  Nothing is stored on the frontend.
 //  @param {string} email
 //  @param {string} password
-//  @param {function} navigate
 // ─────────────────────────────────────────────
-export async function login(email, password, navigate) {
+export async function login(email, password) {
     try {
-        const data = await apiConnector("POST", LOGIN_API, { email, password }, CRED_HEADERS);
+        const data = await apiConnector("POST", LOGIN_API, { email, password });
 
         console.log("LOGIN API RESPONSE:", data);
         // data = { message: "Login successful", user_id: "..." }
 
-        navigate("/dashboard");
-        return data; // user_id available here when you're ready to store it
+        return data;
     } catch (error) {
-        // 401 → error.data.error = "Invalid credentials."
         console.error("LOGIN ERROR:", error);
         throw error;
     }
 }
 
 // ─────────────────────────────────────────────
-//  LOGOUT
-//  ⚠️  Requires a backend route: POST /auth/logout
-//  that calls res.clearCookie("jwt") — add this to your
-//  Server/controllers/Auth.js and Server/routes/User.js
-//  when you're ready.
-//  @param {function} navigate
+//  CHECK AUTH (on page load)
+//  GET /auth/me → { user_id, name, email }
+//  Validates the httpOnly JWT cookie.
 // ─────────────────────────────────────────────
-export async function logout(navigate) {
+export async function checkAuth() {
     try {
-        // TODO: uncomment once POST /auth/logout exists on the backend
-        // await apiConnector("POST", endpoints.LOGOUT_API, null, CRED_HEADERS);
+        const data = await apiConnector("GET", ME_API);
+        // data = { user_id, name, email }
+        return data;
+    } catch {
+        // 401 means not authenticated — this is expected when no cookie exists
+        return null;
+    }
+}
 
-        navigate("/");
+// ─────────────────────────────────────────────
+//  LOGOUT
+//  POST /auth/logout — clears the JWT cookie on server
+// ─────────────────────────────────────────────
+export async function logout() {
+    try {
+        await apiConnector("POST", LOGOUT_API);
     } catch (error) {
         console.error("LOGOUT ERROR:", error);
         throw error;

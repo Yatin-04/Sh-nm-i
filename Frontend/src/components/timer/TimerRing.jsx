@@ -16,48 +16,55 @@ export default function TimerRing({ remaining, total, mode }) {
     const RADIUS = (SIZE - STROKE * 2) / 2;
     const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
-    // Progress: fraction of interval elapsed (0 → full ring, 1 → empty ring)
     const progress = total > 0 ? remaining / total : 1;
     const dashOffset = CIRCUMFERENCE * (1 - progress);
 
-    // Color per mode
     const isBreak = mode === "break" || mode === "paused_break";
     const isIdle = mode === "idle";
     const isPaused = mode === "paused_focus" || mode === "paused_break";
+    const isActive = !isIdle;
 
+    // Track: idle = rgba(45,27,78,0.2), active = subtle white
+    const trackColor = isActive ? "#ffffff0d" : "rgba(45, 27, 78, 0.2)";
+
+    // Progress arc: idle = solid #2D1B4E, active = red/blue
     const ringColor = isIdle
-        ? "#ffffff22"
+        ? "#2D1B4E"
         : isBreak
-        ? "#60a5fa"   // blue for break
-        : "#ef4444";  // red for focus
+        ? "#60a5fa"
+        : "#ef4444";
 
     const modeLabel = isIdle
-        ? "ready"
+        ? "Ready"
         : isPaused
-        ? "paused"
+        ? "Paused"
         : isBreak
-        ? "break"
-        : "focus";
+        ? "Break"
+        : "Focus";
+
+    // Inner circle adapts to context
+    const innerBg = isActive ? "bg-[#0d0d0f]" : "bg-white/20 backdrop-blur-xl";
+    const textColor = isActive ? "text-white" : "text-[#2D1B4E]";
+    const subColor = isActive ? "text-[#9CA3AF]" : "text-[#4A3B69]";
+    const borderStyle = isActive ? "" : "border border-[#2D1B4E]/15";
+    const shadowStyle = "shadow-2xl";
 
     return (
         <div className="relative flex items-center justify-center" style={{ width: SIZE, height: SIZE }}>
-            {/* SVG ring */}
             <svg
                 width={SIZE}
                 height={SIZE}
                 viewBox={`0 0 ${SIZE} ${SIZE}`}
                 style={{ transform: "rotate(-90deg)", position: "absolute" }}
             >
-                {/* Track */}
                 <circle
                     cx={SIZE / 2}
                     cy={SIZE / 2}
                     r={RADIUS}
                     fill="none"
-                    stroke="#ffffff0d"
+                    stroke={trackColor}
                     strokeWidth={STROKE}
                 />
-                {/* Progress arc */}
                 <circle
                     cx={SIZE / 2}
                     cy={SIZE / 2}
@@ -74,19 +81,18 @@ export default function TimerRing({ remaining, total, mode }) {
                 />
             </svg>
 
-            {/* Inner white circle */}
             <div
-                className="relative z-10 rounded-full bg-white flex flex-col items-center justify-center shadow-2xl"
+                className={`relative z-10 rounded-full ${innerBg} ${borderStyle} ${shadowStyle} flex flex-col items-center justify-center`}
                 style={{ width: SIZE - STROKE * 2 - 16, height: SIZE - STROKE * 2 - 16 }}
             >
                 <span
-                    className="text-black font-mono leading-none select-none"
+                    className={`${textColor} leading-none select-none`}
                     style={{ fontSize: "52px", fontWeight: 500, letterSpacing: "-2px" }}
                 >
                     {formatTime(remaining)}
                 </span>
                 <span
-                    className="text-black/30 font-mono text-xs tracking-[0.2em] uppercase mt-2 select-none"
+                    className={`${subColor} text-xs tracking-[0.2em] uppercase mt-2 select-none`}
                 >
                     {modeLabel}
                 </span>

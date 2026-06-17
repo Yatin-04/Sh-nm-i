@@ -1,4 +1,4 @@
-import { registerUser, verifyUser, findUserByEmail } from '../models/User.js';
+import { registerUser, verifyUser, findUserByEmail, findUserById } from '../models/User.js';
 import jwt from 'jsonwebtoken';
 
 // Helper function to generate a JWT
@@ -80,12 +80,44 @@ export const login = async (req, res) => {
 
     res.status(200).json({
     message: 'Login successful',
-    user_id: user.user_id
-    // Notice we no longer need to send the token in the JSON body!
+    user_id: user.user_id,
+    name: user.name,
+    email: user.email
     });
 
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
   }
+};
+
+// GET /auth/me — validate JWT cookie and return current user info
+export const me = async (req, res) => {
+  try {
+    // req.user is set by the auth middleware (decoded JWT payload)
+    const user = await findUserById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+
+    res.status(200).json({
+      user_id: user.user_id,
+      name: user.name,
+      email: user.email,
+    });
+  } catch (error) {
+    console.error('ME endpoint error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// POST /auth/logout — clear the JWT cookie
+export const logout = (req, res) => {
+  res.clearCookie('jwt', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+  });
+  res.status(200).json({ message: 'Logged out successfully' });
 };
