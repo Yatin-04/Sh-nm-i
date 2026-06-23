@@ -9,6 +9,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Analytics from "./pages/Analytics";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedLayout from "./components/ProtectedLayout";
 
 function App() {
     const dispatch = useDispatch();
@@ -44,7 +45,7 @@ function App() {
                 <Route path="/register" element={<Register />} />
 
                 {/* Protected Routes */}
-                <Route 
+                {/* <Route 
                     path="/dashboard" 
                     element={
                         <ProtectedRoute>
@@ -60,7 +61,18 @@ function App() {
                             <Analytics />
                         </ProtectedRoute>
                     }
-                />
+                /> */}
+
+                <Route
+                    element={
+                        <ProtectedRoute>
+                            <ProtectedLayout />
+                        </ProtectedRoute>
+                    }
+                >
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/analytics" element={<Analytics />} />
+                </Route>
                 
             </Routes>
         </div>

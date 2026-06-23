@@ -13,10 +13,13 @@ import {
 
 const monoFont = "'JetBrains Mono', monospace";
 
-const DailyTimelineGraph = ({ data }) => {
+const DailyTimelineGraph = ({ data, theme }) => {
   if (!data || data.length === 0) {
     return (
-      <div className="flex items-center justify-center h-[350px] text-[#7A7164] text-sm">
+      <div 
+        className="flex items-center justify-center h-[350px] text-sm transition-colors duration-500"
+        style={{ color: theme.text_muted }}
+      >
         No activity recorded for this day
       </div>
     );
@@ -69,8 +72,8 @@ const DailyTimelineGraph = ({ data }) => {
               x2="0"
               y2="1"
             >
-              <stop offset="0%" stopColor="#F07A5F" />
-              <stop offset="100%" stopColor="#E8553D" />
+              <stop offset="0%" stopColor={theme.accent} stopOpacity={0.75} />
+              <stop offset="100%" stopColor={theme.accent} stopOpacity={1} />
             </linearGradient>
 
             <linearGradient
@@ -80,13 +83,13 @@ const DailyTimelineGraph = ({ data }) => {
               x2="0"
               y2="1"
             >
-              <stop offset="0%" stopColor="#A9C599" />
-              <stop offset="100%" stopColor="#8FAE7D" />
+              <stop offset="0%" stopColor={theme.accent_2} stopOpacity={0.75} />
+              <stop offset="100%" stopColor={theme.accent_2} stopOpacity={1} />
             </linearGradient>
           </defs>
 
           <CartesianGrid
-            stroke="#2A241E"
+            stroke={theme.border}
             strokeDasharray="4 4"
             vertical={false}
           />
@@ -98,7 +101,7 @@ const DailyTimelineGraph = ({ data }) => {
             axisLine={false}
             tickLine={false}
             tick={{
-              fill: "#A89F94",
+              fill: theme.text_muted,
               fontSize: 11,
               fontFamily: monoFont,
             }}
@@ -114,7 +117,7 @@ const DailyTimelineGraph = ({ data }) => {
             axisLine={false}
             tickLine={false}
             tick={{
-              fill: "#A89F94",
+              fill: theme.text_muted,
               fontSize: 12,
               fontFamily: monoFont,
             }}
@@ -123,21 +126,21 @@ const DailyTimelineGraph = ({ data }) => {
 
           <Tooltip
             cursor={{
-              fill: "rgba(232,85,61,0.08)",
+              fill: theme.panel_pill_bg, // Uses the transparent rgba from your theme
             }}
             contentStyle={{
-              background: "#1F1A16",
-              border: "1px solid #2A241E",
+              background: theme.surface_raised,
+              border: `1px solid ${theme.border}`,
               borderRadius: "16px",
-              color: "#F2EAE0",
-              boxShadow:
-                "0 10px 25px rgba(0,0,0,0.45)",
+              color: theme.text_primary,
+              boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
               fontFamily: monoFont,
               fontSize: "12px",
               padding: "10px 14px",
             }}
             labelStyle={{
-              color: "#A89F94",
+              color: theme.text_muted,
+              marginBottom: "4px",
             }}
             formatter={(value) =>
               formatDuration(value)
@@ -147,7 +150,7 @@ const DailyTimelineGraph = ({ data }) => {
 
           <Legend
             wrapperStyle={{
-              color: "#A89F94",
+              color: theme.text_muted,
               paddingTop: "20px",
               fontSize: "12px",
               fontFamily: monoFont,

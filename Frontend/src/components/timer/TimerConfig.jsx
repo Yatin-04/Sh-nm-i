@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { getUserSubjects, createSubject } from "../../services/Operations/subjectAPI";
 
-export default function TimerConfig({ focusDuration, breakDuration, onSave, onClose }) {
+export default function TimerConfig({ focusDuration, breakDuration, onSave, onClose, theme }) {
     const [focusMin, setFocusMin] = useState(String(Math.floor(focusDuration / 60)));
     const [breakMin, setBreakMin] = useState(String(Math.floor(breakDuration / 60)));
 
@@ -58,22 +58,77 @@ export default function TimerConfig({ focusDuration, breakDuration, onSave, onCl
         });
     };
 
+    // Inject dynamic hover and focus styles
+    const dynamicStyles = theme ? `
+        .theme-input {
+            background-color: ${theme.page_bg};
+            border-color: ${theme.border};
+            color: ${theme.text_primary};
+        }
+        .theme-input:focus {
+            border-color: ${theme.accent};
+            box-shadow: 0 0 0 3px ${theme.accent}33;
+        }
+        .theme-input::placeholder { color: ${theme.text_muted}; }
+        
+        .theme-btn-secondary {
+            background-color: ${theme.page_bg};
+            border-color: ${theme.border};
+            color: ${theme.text_secondary};
+        }
+        .theme-btn-secondary:hover:not(:disabled) {
+            background-color: ${theme.border_subtle};
+            color: ${theme.text_primary};
+        }
+        
+        .theme-btn-cancel {
+            border-color: ${theme.border};
+            color: ${theme.text_secondary};
+        }
+        .theme-btn-cancel:hover {
+            background-color: ${theme.panel_pill_hover_bg};
+            color: ${theme.text_primary};
+        }
+        
+        .theme-btn-primary {
+            background-color: ${theme.button_bg};
+            color: ${theme.button_text};
+            border-color: transparent;
+        }
+        .theme-btn-primary:hover {
+            background-color: ${theme.button_hover_bg};
+        }
+    ` : '';
+
     return (
         <div
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm cursor-default"
             onClick={onClose}
         >
+            {theme && <style>{dynamicStyles}</style>}
+
             <div
-                className="rounded-2xl p-8 w-full max-w-md shadow-2xl border border-white/10"
-                style={{ backgroundColor: "rgba(45, 27, 78, 0.95)", backdropFilter: "blur(12px)" }}
+                className="rounded-2xl p-8 w-full max-w-md shadow-2xl border transition-colors duration-500"
+                style={{ 
+                    backgroundColor: theme?.surface_raised || '#fff', 
+                    borderColor: theme?.border || '#eee' 
+                }}
                 onClick={(e) => e.stopPropagation()}
             >
-                <h2 className="text-white font-semibold text-lg mb-6">Configure Session</h2>
+                <h2 
+                    className="font-semibold text-xl mb-6"
+                    style={{ color: theme?.text_primary }}
+                >
+                    Configure Session
+                </h2>
 
                 {/* Duration inputs */}
                 <div className="flex gap-6 mb-6">
                     <div className="flex-1">
-                        <label className="text-[#EAE0F8] text-xs uppercase tracking-widest block mb-2 font-medium">
+                        <label 
+                            className="text-xs uppercase tracking-widest block mb-2 font-medium"
+                            style={{ color: theme?.text_secondary }}
+                        >
                             Focus (min)
                         </label>
                         <input
@@ -82,11 +137,14 @@ export default function TimerConfig({ focusDuration, breakDuration, onSave, onCl
                             max={120}
                             value={focusMin}
                             onChange={(e) => setFocusMin(e.target.value.replace(/^0+(?=\d)/, ""))}
-                            className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white text-2xl text-center font-medium focus:outline-none focus:border-white/40 focus:ring-2 focus:ring-white/10 transition-all cursor-text"
+                            className="theme-input w-full border rounded-lg px-4 py-3 text-2xl text-center font-medium focus:outline-none transition-all cursor-text"
                         />
                     </div>
                     <div className="flex-1">
-                        <label className="text-[#EAE0F8] text-xs uppercase tracking-widest block mb-2 font-medium">
+                        <label 
+                            className="text-xs uppercase tracking-widest block mb-2 font-medium"
+                            style={{ color: theme?.text_secondary }}
+                        >
                             Break (min)
                         </label>
                         <input
@@ -95,29 +153,36 @@ export default function TimerConfig({ focusDuration, breakDuration, onSave, onCl
                             max={60}
                             value={breakMin}
                             onChange={(e) => setBreakMin(e.target.value.replace(/^0+(?=\d)/, ""))}
-                            className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white text-2xl text-center font-medium focus:outline-none focus:border-white/40 focus:ring-2 focus:ring-white/10 transition-all cursor-text"
+                            className="theme-input w-full border rounded-lg px-4 py-3 text-2xl text-center font-medium focus:outline-none transition-all cursor-text"
                         />
                     </div>
                 </div>
 
                 {/* Subject selector */}
                 <div className="mb-4">
-                    <label className="text-[#EAE0F8] text-xs uppercase tracking-widest block mb-2 font-medium">
+                    <label 
+                        className="text-xs uppercase tracking-widest block mb-2 font-medium"
+                        style={{ color: theme?.text_secondary }}
+                    >
                         Subject
                     </label>
                     {loadingSubjects ? (
-                        <p className="text-white/70 text-sm">Loading subjects...</p>
+                        <p className="text-sm" style={{ color: theme?.text_muted }}>Loading subjects...</p>
                     ) : (
                         <select
                             value={selectedSubjectId}
                             onChange={(e) => setSelectedSubjectId(e.target.value)}
-                            className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-white/40 focus:ring-2 focus:ring-white/10 transition-all appearance-none cursor-pointer"
+                            className="theme-input w-full border rounded-lg px-4 py-3 text-sm focus:outline-none transition-all appearance-none cursor-pointer"
                         >
                             {subjects.length === 0 && (
                                 <option value="" disabled>No subjects yet</option>
                             )}
                             {subjects.map((s) => (
-                                <option key={s.subject_id} value={s.subject_id} className="bg-[#2D1B4E] text-white">
+                                <option 
+                                    key={s.subject_id} 
+                                    value={s.subject_id}
+                                    style={{ backgroundColor: theme?.surface_raised, color: theme?.text_primary }}
+                                >
                                     {s.subject_name}
                                 </option>
                             ))}
@@ -133,32 +198,32 @@ export default function TimerConfig({ focusDuration, breakDuration, onSave, onCl
                         value={newSubjectName}
                         onChange={(e) => setNewSubjectName(e.target.value)}
                         onKeyDown={(e) => e.key === "Enter" && handleCreateSubject()}
-                        className="flex-1 bg-white/10 border border-white/20 rounded-lg px-4 py-2.5 text-white text-sm placeholder-white/50 focus:outline-none focus:border-white/40 focus:ring-2 focus:ring-white/10 transition-all cursor-text"
+                        className="theme-input flex-1 border rounded-lg px-4 py-2.5 text-sm focus:outline-none transition-all cursor-text"
                     />
                     <button
                         onClick={handleCreateSubject}
                         disabled={creatingSubject || !newSubjectName.trim()}
-                        className="px-4 py-2.5 bg-white/10 border border-white/20 hover:bg-white/20 disabled:opacity-30 text-white/70 hover:text-white text-sm rounded-lg transition-colors cursor-pointer"
+                        className="theme-btn-secondary px-4 py-2.5 border disabled:opacity-50 text-sm rounded-lg transition-colors cursor-pointer font-medium"
                     >
                         {creatingSubject ? "..." : "+ Add"}
                     </button>
                 </div>
 
                 {error && (
-                    <p className="text-red-300 text-xs mb-4">{error}</p>
+                    <p className="text-red-500 text-xs mb-4 font-medium">{error}</p>
                 )}
 
                 {/* Actions */}
                 <div className="flex gap-3">
                     <button
                         onClick={onClose}
-                        className="flex-1 py-3 border border-white/15 text-white/70 hover:text-white hover:bg-white/5 text-sm rounded-lg transition-colors cursor-pointer"
+                        className="theme-btn-cancel flex-1 py-3 border text-sm rounded-lg transition-colors cursor-pointer font-medium"
                     >
                         Cancel
                     </button>
                     <button
                         onClick={handleSave}
-                        className="flex-1 py-3 bg-[#2D1B4E] hover:bg-[#3d2866] text-white text-sm rounded-lg transition-all shadow-lg shadow-black/30 hover:shadow-xl hover:shadow-black/40 border border-white/10 cursor-pointer"
+                        className="theme-btn-primary flex-1 py-3 text-sm rounded-lg transition-all shadow-lg shadow-black/10 hover:shadow-xl hover:shadow-black/20 cursor-pointer font-medium tracking-wide"
                     >
                         Start Session →
                     </button>

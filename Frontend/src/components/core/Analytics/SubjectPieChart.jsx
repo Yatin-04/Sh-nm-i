@@ -10,19 +10,13 @@ import {
 
 const monoFont = "'JetBrains Mono', monospace";
 
-const COLORS = [
-  "#E8553D", // tomato
-  "#8FAE7D", // sage
-  "#D9A441", // marigold
-  "#6FA3A0", // teal
-  "#B5739E", // plum
-  "#6B8CAE", // denim
-];
-
-const SubjectPieChart = ({ data }) => {
+const SubjectPieChart = ({ data, theme }) => {
   if (!data || data.length === 0) {
     return (
-      <div className="flex items-center justify-center h-[350px] text-[#7A7164] text-sm">
+      <div 
+        className="flex items-center justify-center h-[350px] text-sm transition-colors duration-500"
+        style={{ color: theme.text_muted }}
+      >
         No session data available
       </div>
     );
@@ -55,14 +49,15 @@ const SubjectPieChart = ({ data }) => {
             innerRadius={75}
             outerRadius={115}
             paddingAngle={3}
-            stroke="#1F1A16"
+            stroke={theme.surface}
             strokeWidth={2}
             labelLine={false}
           >
             {data.map((entry, index) => (
               <Cell
                 key={index}
-                fill={COLORS[index % COLORS.length]}
+                fill={theme.chart_colors[index % theme.chart_colors.length]}
+                style={{ transition: "fill 0.5s ease" }}
               />
             ))}
           </Pie>
@@ -73,10 +68,14 @@ const SubjectPieChart = ({ data }) => {
             y="41%"
             textAnchor="middle"
             dominantBaseline="middle"
-            fill="#A89F94"
+            fill={theme.text_muted}
             fontSize="11"
             fontFamily={monoFont}
-            style={{ letterSpacing: '0.1em', textTransform: 'uppercase' }}
+            style={{ 
+              letterSpacing: '0.1em', 
+              textTransform: 'uppercase',
+              transition: "fill 0.5s ease" 
+            }}
           >
             Total Focus
           </text>
@@ -86,26 +85,28 @@ const SubjectPieChart = ({ data }) => {
             y="51%"
             textAnchor="middle"
             dominantBaseline="middle"
-            fill="#E8553D"
+            fill={theme.accent}
             fontSize="24"
             fontWeight="600"
             fontFamily={monoFont}
+            style={{ transition: "fill 0.5s ease" }}
           >
             {Math.floor(totalDuration / 3600)}h
           </text>
 
           <Tooltip
             contentStyle={{
-              backgroundColor: "#1F1A16",
-              border: "1px solid #2A241E",
+              backgroundColor: theme.surface_raised,
+              border: `1px solid ${theme.border}`,
               borderRadius: "16px",
-              color: "#F2EAE0",
+              color: theme.text_primary,
               fontFamily: monoFont,
               fontSize: "12px",
               padding: "10px 14px",
+              boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
             }}
-            itemStyle={{ color: "#F2EAE0" }}
-            labelStyle={{ color: "#A89F94" }}
+            itemStyle={{ color: theme.text_primary }}
+            labelStyle={{ color: theme.text_muted }}
             formatter={(value, name, props) => {
               const percentage = (
                 (value / totalDuration) *
@@ -125,7 +126,7 @@ const SubjectPieChart = ({ data }) => {
             iconType="circle"
             iconSize={8}
             wrapperStyle={{
-              color: "#A89F94",
+              color: theme.text_muted,
               paddingTop: "20px",
               fontSize: "12px",
               fontFamily: monoFont,

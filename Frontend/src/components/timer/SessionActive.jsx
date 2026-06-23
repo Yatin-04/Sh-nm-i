@@ -94,7 +94,7 @@ const alarm = new AlarmPlayer();
 
 // ── Component ─────────────────────────────────────────────────────────────
 
-export default function SessionActive() {
+export default function SessionActive({ theme }) {
     const dispatch = useDispatch();
     const {
         mode,
@@ -271,9 +271,18 @@ export default function SessionActive() {
 
     return (
         <div className="flex-1 flex flex-col items-center justify-center relative cursor-default">
-            {/* Subject badge */}
-            <div className="mb-6 px-4 py-1.5 bg-white/10 border border-white/20 rounded-full">
-                <span className="text-xs text-white tracking-wide">
+            {/* Subject badge - Subtly tinted with the theme's accent color */}
+            <div 
+                className="mb-6 px-4 py-1.5 rounded-full border transition-colors duration-500"
+                style={{ 
+                    backgroundColor: theme?.accent ? `${theme.accent}1A` : 'rgba(255,255,255,0.1)',
+                    borderColor: theme?.accent ? `${theme.accent}4D` : 'rgba(255,255,255,0.2)'
+                }}
+            >
+                <span 
+                    className="text-xs tracking-wide transition-colors duration-500"
+                    style={{ color: theme?.accent || 'white' }}
+                >
                     📘 {subjectName}
                 </span>
             </div>
@@ -282,12 +291,14 @@ export default function SessionActive() {
                 remaining={remainingSeconds}
                 total={total}
                 mode={mode}
+                theme={theme}
             />
 
             <TimerControls
                 mode={mode}
                 onPlayPause={handlePlayPause}
                 onStop={handleStop}
+                theme={theme}
             />
 
             {/* Elapsed focus time (total across all focus phases) */}
