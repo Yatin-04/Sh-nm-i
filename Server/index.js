@@ -9,7 +9,8 @@ import { subjectRouter } from './src/routes/Subject.js';
 import { todoRouter } from './src/routes/Todo.js';
 import { sessionRouter } from './src/routes/Session.js';
 import { analyticsRouter } from './src/routes/Analytics.js';
-import { initDB } from './src/db/initDB.js' 
+import { initDB } from './src/db/initDB.js';
+import { initWorker } from './src/workers/documentWorker.js';
 
 dotenv.config()
 
@@ -19,8 +20,7 @@ const app = express()
 // Connect to the database and verify the connection
 await connectDB()
 await initDB()
-
-await initDB();
+initWorker();
 
 //middlewares
 app.use(
@@ -41,6 +41,7 @@ app.use('/api/v1/analytics', analyticsRouter)
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
+  console.error('Global error handler:', err.message || err);
   const status = Number(err?.status) || 500
   const message = err?.message || 'Internal Server Error'
   res.status(status).json({ error: message })

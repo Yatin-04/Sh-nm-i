@@ -54,6 +54,12 @@ const LogoutIcon = () => (
     </svg>
 );
 
+const DocumentsIcon = () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+    </svg>
+);
+
 const ChevronRight = () => (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <polyline points="9 18 15 12 9 6" />
@@ -208,6 +214,16 @@ export default function SideNav({ user, onLogout, darkMode = false, theme }) {
                         <Link to='/' className={`w-full flex items-center px-5 py-2.5 text-sm cursor-pointer transition-colors ${darkMode ? 'text-[#E8EAED] hover:bg-[#3C4043]' : 'menu-item'}`}>
                             <span className="mr-4"><LearnIcon /></span>
                             <span className="flex-1 text-left">Learn more</span>
+                            <span className={darkMode ? 'text-[#9AA0A6]' : 'menu-text-muted'}><ChevronRight /></span>
+                        </Link>
+
+                        <Link 
+                            to='/my-documents' 
+                            onClick={() => setIsMenuOpen(false)}
+                            className={`w-full flex items-center px-5 py-2.5 text-sm cursor-pointer transition-colors ${darkMode ? 'text-[#E8EAED] hover:bg-[#3C4043]' : 'menu-item'}`}
+                        >
+                            <span className="mr-4"><DocumentsIcon /></span>
+                            <span className="flex-1 text-left">My documents</span>
                             <span className={darkMode ? 'text-[#9AA0A6]' : 'menu-text-muted'}><ChevronRight /></span>
                         </Link>
 

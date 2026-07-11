@@ -35,3 +35,11 @@ export const analyticsEndpoints = {
     USER_TIMELINE_API:       BASE_URL + "/analytics/timeline",
     USER_CURRENT_STREAK_API: BASE_URL + "/analytics/current_streak"
 }
+
+// DOCUMENT / AI STUDY BUDDY ENDPOINTS
+export const documentEndpoints = {
+    UPLOAD_DOCUMENT_API: BASE_URL + "/subjects/:subject_id/documents",
+    CHAT_WITH_AGENT_API: BASE_URL + "/subjects/:subject_id/chat",
+    GET_USER_DOCUMENTS_API: BASE_URL + "/subjects/documents",
+    DELETE_DOCUMENT_API: BASE_URL + "/subjects/documents/:doc_id"
+}

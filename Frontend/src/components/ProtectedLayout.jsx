@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import SideNav from "./layout/SideNav";
 import { colorThemes } from '../utils/colorTheme';
+import { AIStudyBuddyDrawer } from './AIStudyBuddyDrawer';
 
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from '../services/Operations/authAPI';
@@ -24,6 +25,7 @@ export default function ProtectedLayout() {
         <>
             <SideNav user={user} onLogout={handleLogout} darkMode={!isIdle} theme={theme} />
             <Outlet />
+            <AIStudyBuddyDrawer />
         </>
     );
 }
