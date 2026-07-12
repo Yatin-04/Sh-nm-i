@@ -171,18 +171,16 @@ async function ollamaEmbedding(text) {
 }
 
 async function hfEmbedding(text) {
-    // HuggingFace Inference Providers API for embeddings
-    const response = await fetch(
-        'https://router.huggingface.co/hf-inference/models/BAAI/bge-base-en-v1.5/pipeline/feature-extraction',
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${process.env.HF_API_KEY}`,
-            },
-            body: JSON.stringify({ inputs: text }),
-        }
-    );
+    const HF_URL = 'https://api-inference.huggingface.co/pipeline/feature-extraction/BAAI/bge-base-en-v1.5';
+    
+    const response = await fetch(HF_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${process.env.HF_API_KEY}`,
+        },
+        body: JSON.stringify({ inputs: text, options: { wait_for_model: true } }),
+    });
 
     if (!response.ok) {
         const errText = await response.text();
@@ -190,24 +188,21 @@ async function hfEmbedding(text) {
     }
 
     const data = await response.json();
-    // HF returns [[...embedding...]] for single input
     const embedding = Array.isArray(data[0]) ? data[0] : data;
     return embedding.slice(0, 768);
 }
 
 async function hfEmbeddingBatch(texts) {
-    // HuggingFace supports batch inputs
-    const response = await fetch(
-        'https://router.huggingface.co/hf-inference/models/BAAI/bge-base-en-v1.5/pipeline/feature-extraction',
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${process.env.HF_API_KEY}`,
-            },
-            body: JSON.stringify({ inputs: texts }),
-        }
-    );
+    const HF_URL = 'https://api-inference.huggingface.co/pipeline/feature-extraction/BAAI/bge-base-en-v1.5';
+    
+    const response = await fetch(HF_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${process.env.HF_API_KEY}`,
+        },
+        body: JSON.stringify({ inputs: texts, options: { wait_for_model: true } }),
+    });
 
     if (!response.ok) {
         const errText = await response.text();
@@ -215,7 +210,6 @@ async function hfEmbeddingBatch(texts) {
     }
 
     const data = await response.json();
-    // HF returns [[emb1], [emb2], ...] for batch
     return data.map(emb => (Array.isArray(emb) ? emb : emb).slice(0, 768));
 }
 

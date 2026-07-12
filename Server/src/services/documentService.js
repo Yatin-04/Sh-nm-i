@@ -106,7 +106,8 @@ export const processDocument = async (documentId, fileData, fileType) => {
         await query(`UPDATE documents SET status = 'completed' WHERE id = $1`, [documentId]);
         console.log(`Document ${documentId} processed successfully (${chunks.length} chunks).`);
     } catch (error) {
-        console.error("Document processing failed:", error.message);
+        console.error("Document processing failed:", error.message || error);
+        console.error("Full error:", error);
         await query(`UPDATE documents SET status = 'failed' WHERE id = $1`, [documentId]);
     }
 };
