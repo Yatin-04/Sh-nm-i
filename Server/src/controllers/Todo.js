@@ -1,5 +1,5 @@
 
-import { insertTodo, getTodosByUserId, updateTodo, getUserTodosByDate } from '../models/Todo.js';
+import { insertTodo, getTodosByUserId, updateTodo, getUserTodosByDate } from '../models/todo.js';
 import { updateUserStreak } from '../models/user.js';
 
 export const createTodo = async (req, res) => {

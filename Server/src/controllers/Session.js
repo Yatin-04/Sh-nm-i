@@ -1,5 +1,5 @@
 
-import { insertSession, completeSession, getSessionsBySubjectId } from '../models/Session.js';
+import { insertSession, completeSession, getSessionsBySubjectId } from '../models/session.js';
 
 export const startSession = async (req, res) => {
   try {

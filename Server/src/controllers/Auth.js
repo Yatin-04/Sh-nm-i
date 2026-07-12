@@ -1,4 +1,4 @@
-import { registerUser, verifyUser, findUserByEmail, findUserById } from '../models/User.js';
+import { registerUser, verifyUser, findUserByEmail, findUserById } from '../models/user.js';
 import jwt from 'jsonwebtoken';
 
 // Helper function to generate a JWT

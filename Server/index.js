@@ -8,7 +8,7 @@ import { authRouter } from './src/routes/User.js';
 import { subjectRouter } from './src/routes/Subject.js';
 import { todoRouter } from './src/routes/Todo.js';
 import { sessionRouter } from './src/routes/Session.js';
-import { analyticsRouter } from './src/routes/Analytics.js';
+import { analyticsRouter } from './src/routes/analytics.js';
 import { initDB } from './src/db/initDB.js';
 import { initWorker } from './src/workers/documentWorker.js';
 

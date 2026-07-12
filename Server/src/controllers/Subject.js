@@ -1,5 +1,5 @@
 
-import { insertSubject, getSubjectsByUserId } from '../models/Subject.js';
+import { insertSubject, getSubjectsByUserId } from '../models/subject.js';
 
 export const createSubject = async (req, res) => {
   try {
