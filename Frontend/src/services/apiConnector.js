@@ -2,20 +2,21 @@ export const apiConnector = async (method, url, bodyData = null, headers = null,
     // Safely append query parameters to the URL
     let finalUrl = url;
 
-    // console.log(`API Connector called with method: ${method}, url: ${url}, bodyData:`, bodyData, ", headers:", headers, ", params:", params);
     if (params) {
         const queryString = new URLSearchParams(params).toString();
         finalUrl = `${url}?${queryString}`;
     }
 
+    // Get token from localStorage for Authorization header
+    const token = localStorage.getItem('token');
+
     // Set up request configuration with default JSON headers
     const config = {
         method: method.toUpperCase(),
-        // ✅ Always include credentials so the browser sends/receives
-        // the httpOnly jwt cookie on every request
         credentials: "include",
         headers: {
             "Content-Type": "application/json",
+            ...(token && { "Authorization": `Bearer ${token}` }),
             ...headers,
         },
     };
@@ -27,8 +28,6 @@ export const apiConnector = async (method, url, bodyData = null, headers = null,
 
     // Execute request
     const response = await fetch(finalUrl, config);
-
-    // console.log(`API Connector response for ${method} ${finalUrl}:`, response);
     
     // Parse response data based on content type
     const isJson = response.headers.get("content-type")?.includes("application/json");

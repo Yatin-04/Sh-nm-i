@@ -31,10 +31,14 @@ export const register = async (req, res) => {
     // 3. Create the user
     const newUser = await registerUser(name, email, password);
 
+    // Generate token so user is logged in immediately after signup
+    const token = generateToken(newUser.user_id);
+
     res.status(200).json({
       message: 'Registration successful',
-      // user_id: newUser.user_id
-      // Notice we no longer need to send the token in the JSON body!
+      token,
+      name: newUser.name,
+      email: newUser.email,
     });
 
   } catch (error) {
@@ -60,19 +64,20 @@ export const login = async (req, res) => {
     // Generate token
     const token = generateToken(user.user_id);
 
-    // Attach the token to an httpOnly cookie
-    res.cookie('jwt', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    // In production (cross-domain), send token in response body
+    // In dev (same-origin), also set httpOnly cookie as convenience
+    if (process.env.NODE_ENV !== 'production') {
+      res.cookie('jwt', token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+    }
 
     res.status(200).json({
       message: 'Login successful',
-    // user_id: user.user_id,
-    // Optional: you can also send the token in the response body if needed
-    // Notice we no longer need to send the token in the JSON body!
+      token, // Frontend stores this and sends in Authorization header
       name: user.name,
       email: user.email
     });

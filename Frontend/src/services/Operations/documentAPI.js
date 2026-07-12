@@ -13,9 +13,13 @@ export async function uploadDocument(subjectId, file) {
     const formData = new FormData();
     formData.append("file", file);
 
+    const token = localStorage.getItem('token');
     const response = await fetch(url, {
         method: "POST",
         credentials: "include",
+        headers: {
+            ...(token && { "Authorization": `Bearer ${token}` }),
+        },
         body: formData, // No Content-Type header — browser sets multipart boundary
     });
 
@@ -38,10 +42,14 @@ export async function uploadDocument(subjectId, file) {
 export async function chatWithStudyBuddy(subjectId, message) {
     const url = documentEndpoints.CHAT_WITH_AGENT_API.replace(":subject_id", subjectId);
 
+    const token = localStorage.getItem('token');
     const response = await fetch(url, {
         method: "POST",
         credentials: "include",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+            "Content-Type": "application/json",
+            ...(token && { "Authorization": `Bearer ${token}` }),
+        },
         body: JSON.stringify({ message }),
     });
 

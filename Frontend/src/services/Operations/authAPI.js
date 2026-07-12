@@ -12,8 +12,10 @@ export async function signup(formData) {
     try {
         const data = await apiConnector("POST", SIGNUP_API, formData);
 
-        // console.log("SIGNUP API RESPONSE:", data);
-        // data = { message: "Registration successful", user_id: "..." }
+        // Store token — user is logged in immediately after signup
+        if (data.token) {
+            localStorage.setItem('token', data.token);
+        }
 
         return data;
     } catch (error) {
@@ -33,7 +35,10 @@ export async function login(email, password) {
     try {
         const data = await apiConnector("POST", LOGIN_API, { email, password });
 
-        // console.log("LOGIN API RESPONSE:", data);
+        // Store token for subsequent requests
+        if (data.token) {
+            localStorage.setItem('token', data.token);
+        }
     
         return data;
     } catch (error) {
@@ -71,7 +76,8 @@ export async function logout() {
     try {
         await apiConnector("POST", LOGOUT_API);
     } catch (error) {
-        console.error("LOGOUT ERROR:", error);
-        throw error;
+        // Ignore logout errors — clear token regardless
+    } finally {
+        localStorage.removeItem('token');
     }
 }
