@@ -131,13 +131,20 @@ export const AIStudyBuddyDrawer = () => {
         }
 
         const userMsg = { id: Date.now(), role: 'user', text: input };
-        setMessages(prev => [...prev, userMsg]);
+        const updatedMessages = [...messages, userMsg];
+        setMessages(updatedMessages);
         const userQuestion = input;
         setInput('');
         setIsLoading(true);
 
         try {
-            const data = await chatWithStudyBuddy(subjectId, userQuestion);
+            // Send recent chat history for conversational context
+            const history = updatedMessages
+                .filter(m => m.role === 'user' || m.role === 'ai')
+                .slice(-6)
+                .map(m => ({ role: m.role, text: m.text }));
+
+            const data = await chatWithStudyBuddy(subjectId, userQuestion, history);
             setMessages(prev => [...prev, { id: Date.now() + 1, role: 'ai', text: data.reply }]);
         } catch (error) {
             console.error("Chat error:", error);

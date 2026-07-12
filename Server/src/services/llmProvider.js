@@ -171,9 +171,9 @@ async function ollamaEmbedding(text) {
 }
 
 async function hfEmbedding(text) {
-    // HuggingFace Inference API — free tier, runs nomic-embed-text
+    // HuggingFace Inference Providers API for embeddings
     const response = await fetch(
-        'https://api-inference.huggingface.co/models/nomic-ai/nomic-embed-text-v1.5',
+        'https://router.huggingface.co/hf-inference/models/BAAI/bge-base-en-v1.5/pipeline/feature-extraction',
         {
             method: 'POST',
             headers: {
@@ -192,15 +192,13 @@ async function hfEmbedding(text) {
     const data = await response.json();
     // HF returns [[...embedding...]] for single input
     const embedding = Array.isArray(data[0]) ? data[0] : data;
-    
-    // Truncate to 768 dims if needed (nomic v1.5 outputs 768 by default)
     return embedding.slice(0, 768);
 }
 
 async function hfEmbeddingBatch(texts) {
-    // HuggingFace supports batch inputs natively
+    // HuggingFace supports batch inputs
     const response = await fetch(
-        'https://api-inference.huggingface.co/models/nomic-ai/nomic-embed-text-v1.5',
+        'https://router.huggingface.co/hf-inference/models/BAAI/bge-base-en-v1.5/pipeline/feature-extraction',
         {
             method: 'POST',
             headers: {

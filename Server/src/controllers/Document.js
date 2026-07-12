@@ -64,14 +64,14 @@ export const uploadDocument = async (req, res) => {
 export const chatWithAgent = async (req, res) => {
     try {
         const { id: subjectId } = req.params;
-        const { message } = req.body;
+        const { message, history } = req.body;
 
         if (!message) {
             return res.status(400).json({ error: 'Message is required' });
         }
 
-        // Delegate to the Agent Orchestrator
-        const responseText = await runStudyBuddyAgent(subjectId, message);
+        // Pass chat history for conversational context
+        const responseText = await runStudyBuddyAgent(subjectId, message, history || []);
 
         res.status(200).json({ reply: responseText });
 

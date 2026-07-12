@@ -39,7 +39,7 @@ export async function uploadDocument(subjectId, file) {
 //  Body: { message }
 //  Returns: { reply: "..." }
 // ─────────────────────────────────────────────
-export async function chatWithStudyBuddy(subjectId, message) {
+export async function chatWithStudyBuddy(subjectId, message, history = []) {
     const url = documentEndpoints.CHAT_WITH_AGENT_API.replace(":subject_id", subjectId);
 
     const token = localStorage.getItem('token');
@@ -50,7 +50,7 @@ export async function chatWithStudyBuddy(subjectId, message) {
             "Content-Type": "application/json",
             ...(token && { "Authorization": `Bearer ${token}` }),
         },
-        body: JSON.stringify({ message }),
+        body: JSON.stringify({ message, history }),
     });
 
     const isJson = response.headers.get("content-type")?.includes("application/json");
