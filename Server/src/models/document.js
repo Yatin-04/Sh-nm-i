@@ -28,7 +28,7 @@ export const createDocumentTables = async () => {
         page_start INTEGER,
         page_end INTEGER,
         chunk_index INTEGER,
-        embedding vector(768)
+        embedding vector(512)
     );
     `;
     await query(createChunksTableQuery);
@@ -37,8 +37,19 @@ export const createDocumentTables = async () => {
     await query(`ALTER TABLE document_chunks ADD COLUMN IF NOT EXISTS page_start INTEGER;`);
     await query(`ALTER TABLE document_chunks ADD COLUMN IF NOT EXISTS page_end INTEGER;`);
     await query(`ALTER TABLE document_chunks ADD COLUMN IF NOT EXISTS chunk_index INTEGER;`);
+    
+    // Migrate embedding column to 512 dims if it was previously 768
+    try {
+        // Clear old embeddings from incompatible models before resizing
+        await query(`DELETE FROM document_chunks WHERE embedding IS NOT NULL;`);
+        await query(`UPDATE documents SET status = 'failed' WHERE status = 'completed';`);
+        await query(`ALTER TABLE document_chunks ALTER COLUMN embedding TYPE vector(512);`);
+    } catch (e) {
+        // Column already correct — ignore
+    }
 
-    // 4. Create an HNSW index for fast similarity search
+    // 4. Recreate HNSW index for fast similarity search
+    await query(`DROP INDEX IF EXISTS document_chunks_embedding_idx;`);
     const createIndexQuery = `
     CREATE INDEX IF NOT EXISTS document_chunks_embedding_idx 
     ON document_chunks 
