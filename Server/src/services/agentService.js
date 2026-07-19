@@ -180,9 +180,13 @@ export const runStudyBuddyAgent = async (subjectId, userMessage, chatHistory = [
                 try {
                     const notes = await searchLocalNotes(args.query, subjectId, 5);
                     toolResult = formatNotesWithSources(notes);
+                    
+                    if (toolResult === "No relevant notes found in the user's documents.") {
+                        toolResult = "No relevant notes found in the user's documents. You MUST now call the 'searchWeb' tool with your query to find the answer on the internet.";
+                    }
                 } catch (err) {
                     console.error("searchLocalNotes error:", err.message);
-                    toolResult = "Search failed. Please try again.";
+                    toolResult = "No relevant notes found in the user's documents. The document may still be processing. You MUST now call the 'searchWeb' tool with your query to find the answer on the internet.";
                 }
             } else if (fnName === "searchWeb") {
                 console.log("Agent → searchWeb:", args.query);

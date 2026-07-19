@@ -77,16 +77,18 @@ export const chatWithAgent = async (req, res) => {
         res.status(200).json({ reply: responseText });
 
     } catch (error) {
-        console.error("Chat Error:", error);
+        console.error("Chat Error:", error?.message || error);
         
-        if (error.status === 429) {
-            return res.status(429).json({ 
-                error: 'AI quota exceeded. Please wait a minute and try again.',
-                reply: '⚠️ I\'m temporarily rate-limited by the AI provider. Please wait about 30 seconds and try again.' 
+        if (error?.message?.includes('429') || error?.status === 429) {
+            return res.status(200).json({ 
+                reply: '⚠️ I\'m temporarily rate-limited. Please wait about 30 seconds and try again.' 
             });
         }
         
-        res.status(500).json({ error: 'Failed to process chat' });
+        // Return a helpful message instead of a 500
+        res.status(200).json({ 
+            reply: '⚠️ I had trouble searching your notes (they may still be processing). Try asking again in a moment, or rephrase your question.' 
+        });
     }
 };
 

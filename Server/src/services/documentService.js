@@ -124,16 +124,12 @@ export const processDocument = async (documentId, fileData, fileType, fileName) 
         const chunks = chunkPages(pages);
         console.log(`Document split into ${chunks.length} chunks across ${pages.length} pages. Generating embeddings...`);
 
-        // Batch embed (smaller batches + delay to respect rate limits)
-        const BATCH_SIZE = 5;
+        // Batch embed (Voyage AI allows up to 128 items per request)
+        const BATCH_SIZE = 128;
         for (let batchStart = 0; batchStart < chunks.length; batchStart += BATCH_SIZE) {
             const batch = chunks.slice(batchStart, batchStart + BATCH_SIZE);
             const texts = batch.map(c => c.content);
-            
-            // Rate limit: wait 21s between calls to stay under 3 RPM
-            if (batchStart > 0) {
-                await new Promise(r => setTimeout(r, 21000));
-            }
+
 
             const embeddings = await generateEmbeddingBatch(texts);
 
