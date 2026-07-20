@@ -39,7 +39,7 @@ export async function uploadDocument(subjectId, file) {
 //  Body: { message }
 //  Returns: { reply: "..." }
 // ─────────────────────────────────────────────
-export async function chatWithStudyBuddy(subjectId, message, history = []) {
+export async function chatWithStudyBuddy(subjectId, message, history = [], documentId = null) {
     const url = documentEndpoints.CHAT_WITH_AGENT_API.replace(":subject_id", subjectId);
 
     const token = localStorage.getItem('token');
@@ -50,7 +50,7 @@ export async function chatWithStudyBuddy(subjectId, message, history = []) {
             "Content-Type": "application/json",
             ...(token && { "Authorization": `Bearer ${token}` }),
         },
-        body: JSON.stringify({ message, history }),
+        body: JSON.stringify({ message, history, ...(documentId && { documentId }) }),
     });
 
     const isJson = response.headers.get("content-type")?.includes("application/json");
@@ -107,6 +107,36 @@ export async function generateFlashcards(subjectId, documentId = null) {
         return data.flashcards;
     } catch (error) {
         console.error("GENERATE FLASHCARDS ERROR:", error);
+        throw error;
+    }
+}
+
+// ─────────────────────────────────────────────
+//  FETCH DOCUMENT CHAT HISTORY
+//  GET /subjects/documents/:doc_id/chat
+// ─────────────────────────────────────────────
+export async function getDocumentChat(docId) {
+    const url = documentEndpoints.GET_DOCUMENT_CHAT_API.replace(":doc_id", docId);
+    try {
+        const data = await apiConnector("GET", url);
+        return data.messages || [];
+    } catch (error) {
+        console.error("GET DOCUMENT CHAT ERROR:", error);
+        return [];
+    }
+}
+
+// ─────────────────────────────────────────────
+//  CLEAR DOCUMENT CHAT HISTORY
+//  DELETE /subjects/documents/:doc_id/chat
+// ─────────────────────────────────────────────
+export async function clearDocumentChat(docId) {
+    const url = documentEndpoints.CLEAR_DOCUMENT_CHAT_API.replace(":doc_id", docId);
+    try {
+        const data = await apiConnector("DELETE", url);
+        return data;
+    } catch (error) {
+        console.error("CLEAR DOCUMENT CHAT ERROR:", error);
         throw error;
     }
 }

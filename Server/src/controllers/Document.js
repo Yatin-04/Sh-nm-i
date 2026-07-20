@@ -65,14 +65,27 @@ export const uploadDocument = async (req, res) => {
 export const chatWithAgent = async (req, res) => {
     try {
         const { id: subjectId } = req.params;
-        const { message, history } = req.body;
+        const { message, history, documentId } = req.body;
 
         if (!message) {
             return res.status(400).json({ error: 'Message is required' });
         }
 
-        // Pass chat history for conversational context
-        const responseText = await runStudyBuddyAgent(subjectId, message, history || []);
+        // Pass chat history and optional documentId for conversational context
+        const responseText = await runStudyBuddyAgent(subjectId, message, history || [], documentId || null);
+
+        // Auto-persist Q&A into document_chats if this is a per-document chat
+        if (documentId && req.user?.id) {
+            try {
+                await query(
+                    `INSERT INTO document_chats (document_id, user_id, role, content) 
+                     VALUES ($1, $2, 'user', $3), ($1, $2, 'ai', $4)`,
+                    [documentId, req.user.id, message, responseText]
+                );
+            } catch (dbErr) {
+                console.error("Failed to persist document chat message:", dbErr?.message || dbErr);
+            }
+        }
 
         res.status(200).json({ reply: responseText });
 
@@ -89,6 +102,46 @@ export const chatWithAgent = async (req, res) => {
         res.status(200).json({ 
             reply: '⚠️ I had trouble searching your notes (they may still be processing). Try asking again in a moment, or rephrase your question.' 
         });
+    }
+};
+
+// Fetch persistent chat history for a specific document
+export const getDocumentChat = async (req, res) => {
+    try {
+        const { docId } = req.params;
+        const userId = req.user.id;
+
+        const { rows } = await query(
+            `SELECT id, role, content, created_at 
+             FROM document_chats 
+             WHERE document_id = $1 AND user_id = $2 
+             ORDER BY created_at ASC 
+             LIMIT 100`,
+            [docId, userId]
+        );
+
+        res.status(200).json({ messages: rows });
+    } catch (error) {
+        console.error("Get Document Chat Error:", error);
+        res.status(500).json({ error: "Failed to fetch document chat history" });
+    }
+};
+
+// Clear chat history for a specific document
+export const clearDocumentChat = async (req, res) => {
+    try {
+        const { docId } = req.params;
+        const userId = req.user.id;
+
+        await query(
+            `DELETE FROM document_chats WHERE document_id = $1 AND user_id = $2`,
+            [docId, userId]
+        );
+
+        res.status(200).json({ message: "Chat history cleared successfully" });
+    } catch (error) {
+        console.error("Clear Document Chat Error:", error);
+        res.status(500).json({ error: "Failed to clear document chat history" });
     }
 };
 

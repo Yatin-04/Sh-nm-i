@@ -149,8 +149,9 @@ const rewriteQueryForRetrieval = async (rawQuery, history) => {
  * @param {string} subjectId - The subject to search within
  * @param {string} userMessage - The user's current message
  * @param {Array} chatHistory - Previous messages for context (optional)
+ * @param {string|null} documentId - Narrow search to a specific document (optional)
  */
-export const runStudyBuddyAgent = async (subjectId, userMessage, chatHistory = []) => {
+export const runStudyBuddyAgent = async (subjectId, userMessage, chatHistory = [], documentId = null) => {
     // Build messages array with system prompt + history + current message
     const messages = [
         { role: "system", content: SYSTEM_PROMPT },
@@ -208,7 +209,7 @@ export const runStudyBuddyAgent = async (subjectId, userMessage, chatHistory = [
                     const rewrittenQuery = await rewriteQueryForRetrieval(args.query, recentHistory);
                     console.log("Agent → searchLocalNotes (rewritten):", rewrittenQuery);
                     
-                    const notes = await searchLocalNotes(rewrittenQuery, subjectId, 8);
+                    const notes = await searchLocalNotes(rewrittenQuery, subjectId, 8, documentId);
                     toolResult = formatNotesWithSources(notes);
                     
                     if (toolResult === "No relevant notes found in the user's documents.") {

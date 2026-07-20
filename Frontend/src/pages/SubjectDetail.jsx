@@ -275,6 +275,7 @@ export default function SubjectDetail() {
             {selectedDoc && (
                 <DocumentPreviewModal 
                     document={selectedDoc}
+                    subjectId={subjectId}
                     onClose={() => setSelectedDoc(null)}
                     theme={theme}
                 />

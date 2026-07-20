@@ -164,26 +164,49 @@ export const processDocument = async (documentId, fileData, fileType, fileName) 
 
 // ─── Vector Search (returns content + source references) ────────────────────
 
-export const searchLocalNotes = async (queryText, subjectId, limit = 5) => {
+export const searchLocalNotes = async (queryText, subjectId, limit = 5, documentId = null) => {
     const queryEmbedding = await generateEmbeddings(queryText);
     const embeddingString = `[${queryEmbedding.join(',')}]`;
     
-    const sql = `
-        SELECT 
-            dc.content,
-            dc.page_start,
-            dc.page_end,
-            dc.chunk_index,
-            d.title as document_title,
-            d.file_url,
-            1 - (dc.embedding <=> $1) as similarity
-        FROM document_chunks dc
-        JOIN documents d ON dc.document_id = d.id
-        WHERE d.subject_id = $2 AND d.status = 'completed'
-        ORDER BY dc.embedding <=> $1
-        LIMIT $3
-    `;
+    let sql;
+    let params;
     
-    const result = await query(sql, [embeddingString, subjectId, limit]);
+    if (documentId) {
+        sql = `
+            SELECT 
+                dc.content,
+                dc.page_start,
+                dc.page_end,
+                dc.chunk_index,
+                d.title as document_title,
+                d.file_url,
+                1 - (dc.embedding <=> $1) as similarity
+            FROM document_chunks dc
+            JOIN documents d ON dc.document_id = d.id
+            WHERE dc.document_id = $2 AND d.status = 'completed'
+            ORDER BY dc.embedding <=> $1
+            LIMIT $3
+        `;
+        params = [embeddingString, documentId, limit];
+    } else {
+        sql = `
+            SELECT 
+                dc.content,
+                dc.page_start,
+                dc.page_end,
+                dc.chunk_index,
+                d.title as document_title,
+                d.file_url,
+                1 - (dc.embedding <=> $1) as similarity
+            FROM document_chunks dc
+            JOIN documents d ON dc.document_id = d.id
+            WHERE d.subject_id = $2 AND d.status = 'completed'
+            ORDER BY dc.embedding <=> $1
+            LIMIT $3
+        `;
+        params = [embeddingString, subjectId, limit];
+    }
+    
+    const result = await query(sql, params);
     return result.rows;
 };

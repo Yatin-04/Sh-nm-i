@@ -12,11 +12,11 @@ import { FiX } from 'react-icons/fi';
 import { colorThemes } from '../utils/colorTheme';
 
 import SideNav from '../components/layout/SideNav';
-import StatTiles from '../components/core/Analytics/StatTiles';
-import SubjectPieChart from '../components/core/Analytics/SubjectPieChart';
-import SessionBarGraph from '../components/core/Analytics/SessionBarGraph';
-import TodoHeatmap from '../components/core/Analytics/TodoHeatmap';
-import DailyTimelineGraph from '../components/core/Analytics/DailyTimelineGraph';
+import StatTiles from '../components/Analytics/StatTiles';
+import SubjectPieChart from '../components/Analytics/SubjectPieChart';
+import SessionBarGraph from '../components/Analytics/SessionBarGraph';
+// import TodoHeatmap from '../components/Analytics/TodoHeatmap';
+import DailyTimelineGraph from '../components/Analytics/DailyTimelineGraph';
 
 const displayFont = { fontFamily: "'Fraunces', Georgia, serif" };
 const monoFont = { fontFamily: "'JetBrains Mono', monospace" };

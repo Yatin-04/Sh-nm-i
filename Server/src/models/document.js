@@ -68,5 +68,23 @@ export const createDocumentTables = async () => {
     `;
     await query(createIndexQuery);
 
-    console.log('Document tables and vector indexes ensured.');
+    // 5. Create document_chats table for persistent per-document AI conversations
+    const createDocumentChatsTableQuery = `
+    CREATE TABLE IF NOT EXISTS document_chats (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        document_id UUID NOT NULL REFERENCES documents(id) ON DELETE CASCADE,
+        user_id UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+        role VARCHAR(10) NOT NULL CHECK (role IN ('user', 'ai')),
+        content TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    `;
+    await query(createDocumentChatsTableQuery);
+
+    await query(`
+    CREATE INDEX IF NOT EXISTS idx_doc_chats_document_user 
+    ON document_chats (document_id, user_id, created_at ASC);
+    `);
+
+    console.log('Document tables, vector indexes, and chat tables ensured.');
 };

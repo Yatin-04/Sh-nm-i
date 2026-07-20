@@ -43,5 +43,7 @@ export const documentEndpoints = {
     CHAT_WITH_AGENT_API: BASE_URL + "/subjects/:subject_id/chat",
     GET_USER_DOCUMENTS_API: BASE_URL + "/subjects/documents",
     DELETE_DOCUMENT_API: BASE_URL + "/subjects/documents/:doc_id",
-    GENERATE_FLASHCARDS_API: BASE_URL + "/subjects/:subject_id/flashcards"
+    GENERATE_FLASHCARDS_API: BASE_URL + "/subjects/:subject_id/flashcards",
+    GET_DOCUMENT_CHAT_API: BASE_URL + "/subjects/documents/:doc_id/chat",
+    CLEAR_DOCUMENT_CHAT_API: BASE_URL + "/subjects/documents/:doc_id/chat"
 }
