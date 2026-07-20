@@ -30,7 +30,7 @@ export default function ProtectedLayout() {
         <>
             <SideNav user={user} onLogout={handleLogout} darkMode={!isIdle} theme={theme} />
             <Outlet />
-            <AIStudyBuddyDrawer />
+            {/* <AIStudyBuddyDrawer /> */}
         </>
     );
 }

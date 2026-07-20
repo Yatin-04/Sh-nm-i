@@ -165,7 +165,7 @@ export default function FlashcardViewer({ subjectId, documentId = null, document
                                         onClick={handleNext}
                                         disabled={currentIndex === flashcards.length - 1}
                                         className="px-6 py-2.5 rounded-lg font-medium transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                                        style={{ backgroundColor: theme.accent, color: theme.bg }}
+                                        style={{ backgroundColor: theme.accent, color: theme.button_text || "#fff" }}
                                     >
                                         Next
                                     </button>

@@ -97,7 +97,7 @@ function PreviewPane({ doc, theme, txtContent, loadingText }) {
             <a
                 href={doc.file_url} target="_blank" rel="noopener noreferrer"
                 className="px-5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 cursor-pointer hover:opacity-90 transition"
-                style={{ backgroundColor: theme.accent, color: theme.bg || "#fff" }}
+                style={{ backgroundColor: theme.accent, color: theme.button_text || "#fff" }}
             >
                 <FiExternalLink size={16} /><span>Open Document</span>
             </a>
@@ -316,7 +316,7 @@ export default function DocumentPreviewModal({ document: doc, subjectId, onClose
                     animate={{ scale: 1, opacity: 1, y: 0 }}
                     exit={{ scale: 0.96, opacity: 0, y: 16 }}
                     onClick={e => e.stopPropagation()}
-                    className="relative w-full max-w-7xl rounded-2xl shadow-2xl flex flex-col"
+                    className="relative w-full max-w-7xl rounded-sm shadow-2xl flex flex-col"
                     style={{
                         backgroundColor: theme.surface_raised,
                         border: `1px solid ${theme.border}`,

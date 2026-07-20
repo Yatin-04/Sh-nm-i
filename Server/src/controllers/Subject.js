@@ -1,5 +1,5 @@
 
-import { insertSubject, getSubjectsByUserId } from '../models/subject.js';
+import { insertSubject, getSubjectsByUserId, deleteSubjectById } from '../models/subject.js';
 
 export const createSubject = async (req, res) => {
   try {
@@ -40,6 +40,23 @@ export const getUserSubjects = async (req, res) => {
 
   } catch (error) {
     console.error('Error fetching subjects:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const deleteSubject = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    const deleted = await deleteSubjectById(id, userId);
+    if (!deleted) {
+      return res.status(404).json({ error: 'Subject not found or unauthorized' });
+    }
+
+    res.status(200).json({ message: 'Subject deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting subject:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };

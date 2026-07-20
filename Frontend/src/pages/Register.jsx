@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signup } from "../services/Operations/authAPI";
 import { setAuth } from "../slices/authSlice";
+import { FiArrowLeft } from "react-icons/fi";
 
 export default function Register() {
     const navigate = useNavigate();
@@ -36,6 +37,14 @@ export default function Register() {
     return (
         <div className="flex-1 flex items-center justify-center py-12 px-6 min-h-[calc(100vh-60px)]">
             <div className="w-full max-w-[420px] bg-white border border-[#cbd5e1] rounded-2xl p-10">
+                <Link
+                    to="/"
+                    className="inline-flex items-center gap-1.5 text-xs text-[#6b7280] hover:text-[#111827] transition-colors mb-6 group cursor-pointer font-medium"
+                >
+                    <FiArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
+                    <span>Back to Home</span>
+                </Link>
+
                 <div className="mb-8">
                     <span className="font-mono text-[0.7rem] text-[#6b7280] tracking-[0.08em] uppercase">create account</span>
                     <h1 className="text-[1.8rem] font-extrabold tracking-[-0.02em] text-[#111827] mt-1.5 mb-1">Start focusing.</h1>

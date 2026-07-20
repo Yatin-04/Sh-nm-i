@@ -1,5 +1,5 @@
 import express from 'express';
-import { createSubject, getUserSubjects } from '../controllers/Subject.js';
+import { createSubject, getUserSubjects, deleteSubject } from '../controllers/Subject.js';
 import { uploadDocument, chatWithAgent, getUserDocuments, deleteDocument, getDocumentChat, clearDocumentChat } from '../controllers/Document.js';
 import { generateFlashcards } from '../controllers/Flashcard.js';
 import { auth } from '../middlewares/auth.js';
@@ -12,6 +12,7 @@ router.use(auth);
 
 router.post('/', createSubject);
 router.get('/', getUserSubjects);
+router.delete('/:id', deleteSubject);
 
 // Document management routes
 router.get('/documents', getUserDocuments);        // All user docs grouped by subject

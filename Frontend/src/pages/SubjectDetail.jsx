@@ -163,10 +163,10 @@ export default function SubjectDetail() {
                         >
                             <button
                                 onClick={() => setViewFormat("card")}
-                                className="p-1.5 rounded-md transition-all cursor-pointer flex items-center justify-center"
+                                className="p-1.5 rounded-xs transition-all cursor-pointer flex items-center justify-center"
                                 style={{ 
                                     backgroundColor: viewFormat === "card" ? theme.accent : "transparent",
-                                    color: viewFormat === "card" ? (theme.bg || "#fff") : theme.text_muted
+                                    color: viewFormat === "card" ? (theme.button_text || "#fff") : theme.text_muted
                                 }}
                                 title="Card format"
                             >
@@ -174,10 +174,10 @@ export default function SubjectDetail() {
                             </button>
                             <button
                                 onClick={() => setViewFormat("list")}
-                                className="p-1.5 rounded-md transition-all cursor-pointer flex items-center justify-center"
+                                className="p-1.5 rounded-xs transition-all cursor-pointer flex items-center justify-center"
                                 style={{ 
                                     backgroundColor: viewFormat === "list" ? theme.accent : "transparent",
-                                    color: viewFormat === "list" ? (theme.bg || "#fff") : theme.text_muted
+                                    color: viewFormat === "list" ? (theme.button_text || "#fff") : theme.text_muted
                                 }}
                                 title="List format"
                             >
@@ -201,7 +201,7 @@ export default function SubjectDetail() {
                             className="px-4 py-2.5 rounded-lg flex items-center justify-center gap-2 font-medium transition-all active:scale-95 cursor-pointer shadow-lg disabled:opacity-50"
                             style={{ 
                                 backgroundColor: theme.accent, 
-                                color: theme.bg || "#ffffff",
+                                color: theme.button_text || "#ffffff",
                                 boxShadow: `0 4px 14px ${theme.accent}3d`
                             }}
                         >
@@ -244,7 +244,7 @@ export default function SubjectDetail() {
                         <button
                             onClick={handleUploadClick}
                             className="px-5 py-2.5 rounded-lg flex items-center justify-center gap-2 font-medium transition-colors cursor-pointer"
-                            style={{ backgroundColor: theme.accent, color: theme.bg || "#fff" }}
+                            style={{ backgroundColor: theme.accent, color: theme.button_text || "#fff" }}
                         >
                             <FiPlus size={18} />
                             <span>Upload Document</span>

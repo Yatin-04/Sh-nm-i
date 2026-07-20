@@ -35,3 +35,18 @@ export async function createSubject(subjectName) {
         throw error;
     }
 }
+
+// ─────────────────────────────────────────────
+//  DELETE SUBJECT
+//  DELETE /subjects/:id
+// ─────────────────────────────────────────────
+export async function deleteSubject(subjectId) {
+    const url = subjectEndpoints.DELETE_SUBJECT_API.replace(":id", subjectId);
+    try {
+        const data = await apiConnector("DELETE", url);
+        return data;
+    } catch (error) {
+        console.error("DELETE SUBJECT ERROR:", error);
+        throw error;
+    }
+}

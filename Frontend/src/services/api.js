@@ -11,7 +11,8 @@ export const endpoints = {
 // SUBJECT ENDPOINTS
 export const subjectEndpoints = {
     GET_USER_SUBJECTS_API: BASE_URL + "/subjects/",
-    CREATE_SUBJECT_API:    BASE_URL + "/subjects/"
+    CREATE_SUBJECT_API:    BASE_URL + "/subjects/",
+    DELETE_SUBJECT_API:    BASE_URL + "/subjects/:id"
 }
 
 // TODOS ENDPOINTS

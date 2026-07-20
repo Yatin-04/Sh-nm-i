@@ -320,7 +320,7 @@ export default function SessionActive({ theme }) {
 
             {/* Confirm stop dialog */}
             {confirmStop && (
-                <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+                <div className="fixed inset-0 left-16 z-40 flex items-center justify-center bg-black/60 backdrop-blur-md animate-in fade-in duration-200">
                     <div className="bg-[#141417] border border-white/10 rounded-2xl p-7 w-80 shadow-2xl">
                         <h3 className="text-white font-semibold text-base mb-2">End Session?</h3>
                         <p className="text-[#9CA3AF] text-sm mb-6">

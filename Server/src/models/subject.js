@@ -42,3 +42,14 @@ export const getSubjectsByUserId = async (userId) => {
   const { rows } = await query(sql, [userId]);
   return rows;
 };
+
+// 4. Delete a subject by ID for a user
+export const deleteSubjectById = async (subjectId, userId) => {
+  const sql = `
+    DELETE FROM subjects 
+    WHERE subject_id = $1 AND user_id = $2
+    RETURNING *;
+  `;
+  const { rows } = await query(sql, [subjectId, userId]);
+  return rows[0];
+};

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { getUserSubjects, createSubject } from "../services/Operations/subjectAPI";
+import { getUserSubjects, createSubject, deleteSubject } from "../services/Operations/subjectAPI";
 import { colorThemes } from "../utils/colorTheme";
 import SubjectCard from "../components/subjects/SubjectCard";
 import { FiPlus, FiBookOpen, FiArrowLeft, FiAlertCircle } from "react-icons/fi";
@@ -14,6 +14,7 @@ export default function Subjects() {
     const [error, setError] = useState(null);
     const [newSubjectName, setNewSubjectName] = useState("");
     const [creating, setCreating] = useState(false);
+    const [deletingId, setDeletingId] = useState(null);
     const [showAddForm, setShowAddForm] = useState(false);
 
     const themeId = useSelector((state) => state.theme.theme_id);
@@ -22,6 +23,23 @@ export default function Subjects() {
     useEffect(() => {
         fetchSubjects();
     }, []);
+
+    const handleDeleteSubject = async (subjectId) => {
+        if (!window.confirm("Are you sure you want to delete this subject? All documents within it will also be deleted.")) {
+            return;
+        }
+
+        setDeletingId(subjectId);
+        try {
+            await deleteSubject(subjectId);
+            setSubjects((prev) => prev.filter((s) => s.subject_id !== subjectId));
+        } catch (err) {
+            console.error("Failed to delete subject:", err);
+            setError(err?.data?.error || "Failed to delete subject. Please try again.");
+        } finally {
+            setDeletingId(null);
+        }
+    };
 
     const fetchSubjects = async () => {
         try {
@@ -88,7 +106,7 @@ export default function Subjects() {
                             className="px-4 py-2.5 rounded-sm flex items-center justify-center gap-2 font-medium transition-all active:scale-95 cursor-pointer shadow-lg"
                             style={{ 
                                 backgroundColor: theme.accent, 
-                                color: theme.bg || "#ffffff",
+                                color: theme.button_text || "#ffffff",
                                 boxShadow: `0 4px 14px ${theme.accent}3d`
                             }}
                         >
@@ -127,7 +145,7 @@ export default function Subjects() {
                                     type="submit"
                                     disabled={creating || !newSubjectName.trim()}
                                     className="px-5 py-2.5 rounded-md text-xs font-medium transition-all hover: cursor-pointer disabled:opacity-50"
-                                    style={{ backgroundColor: theme.accent, color: theme.bg || "#fff" }}
+                                    style={{ backgroundColor: theme.accent, color: theme.button_text || "#fff" }}
                                 >
                                     {creating ? "Creating..." : "Create"}
                                 </button>
@@ -183,7 +201,7 @@ export default function Subjects() {
                         <button
                             onClick={() => setShowAddForm(true)}
                             className="px-4 py-2.5 rounded-lg flex items-center justify-center gap-2 font-medium transition-colors cursor-pointer"
-                            style={{ backgroundColor: theme.accent, color: theme.bg || "#fff" }}
+                            style={{ backgroundColor: theme.accent, color: theme.button_text || "#fff" }}
                         >
                             <FiPlus size={18} />
                             <span>Create Your First Subject</span>
@@ -195,7 +213,9 @@ export default function Subjects() {
                             <SubjectCard 
                                 key={subj.subject_id} 
                                 subject={subj} 
-                                theme={theme} 
+                                theme={theme}
+                                onDelete={handleDeleteSubject}
+                                deletingId={deletingId}
                             />
                         ))}
                     </div>

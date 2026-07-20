@@ -18,6 +18,7 @@ export const colorThemes = [
       "accent_2": "#7A9E6A",
       "accent_3": "#C8922A",
       "accent_4": "#5E9499",
+      "todo_accent": "#E8553D",
 
       "chart_colors": ["#E8553D", "#7A9E6A", "#C8922A", "#5E9499", "#A0668E", "#5A7A9E"],
 
@@ -58,17 +59,18 @@ export const colorThemes = [
       "accent_2": "#6DAF8A",
       "accent_3": "#D4903A",
       "accent_4": "#5B8FAA",
+      "todo_accent": "#2D1B4E",
 
-      "chart_colors": ["#7B4FC4", "#6DAF8A", "#D4903A", "#5B8FAA", "#C4537A", "#4AAAA0"],
+      "chart_colors": ["#7B4FC4", "#6DAF8A", "#D4903A", "#5B8FAA", "#C45B8F", "#4A6FA5"],
 
       "button_bg": "#2D1B4E",
       "button_text": "#EFE9F7",
-      "button_hover_bg": "#3D2866",
+      "button_hover_bg": "#452A77",
 
       "ring_stroke": "#2D1B4E",
-      "ring_fill": "#E6DDF5",
+      "ring_fill": "#E2D8F0",
 
-      "panel_pill_bg": "rgba(45,27,78,0.09)",
+      "panel_pill_bg": "rgba(45,27,78,0.10)",
       "panel_pill_border": "rgba(45,27,78,0.12)",
       "panel_pill_hover_bg": "rgba(45,27,78,0.16)",
 
@@ -81,42 +83,43 @@ export const colorThemes = [
 
     {
       "color_grp": 3,
-      "name": "Verdant",
-      "description": "Pale sage and forest green. Calm, botanical feel.",
+      "name": "Crimson",
+      "description": "Deep wine and blush rose. Bold and intense focus theme.",
 
-      "page_bg": "#ECF4EC",
-      "surface": "#F4FAF4",
+      "page_bg": "#F9ECEF",
+      "surface": "#FCF4F6",
       "surface_raised": "#FFFFFF",
-      "border": "#D0E4D0",
-      "border_subtle": "#DCEEDD",
+      "border": "#EACAD2",
+      "border_subtle": "#F3DBE1",
 
-      "text_primary": "#162416",
-      "text_secondary": "#3A5C3A",
-      "text_muted": "#7A9A7A",
+      "text_primary": "#3B121B",
+      "text_secondary": "#6A2B39",
+      "text_muted": "#9E6B77",
 
-      "accent": "#3D7A50",
-      "accent_2": "#8FAE7D",
-      "accent_3": "#C8A42A",
-      "accent_4": "#5A9EA8",
+      "accent": "#D14968",
+      "accent_2": "#6DAF8A",
+      "accent_3": "#D4903A",
+      "accent_4": "#5B8FAA",
+      "todo_accent": "#8A2640",
 
-      "chart_colors": ["#3D7A50", "#8FAE7D", "#C8A42A", "#5A9EA8", "#9E6A8A", "#6A8AAE"],
+      "chart_colors": ["#D14968", "#6DAF8A", "#D4903A", "#5B8FAA", "#8A2640", "#5A7EA0"],
 
-      "button_bg": "#162416",
-      "button_text": "#ECF4EC",
-      "button_hover_bg": "#243C24",
+      "button_bg": "#3B121B",
+      "button_text": "#F9ECEF",
+      "button_hover_bg": "#5A1C29",
 
-      "ring_stroke": "#1E3A1E",
-      "ring_fill": "#DFF0DF",
+      "ring_stroke": "#3B121B",
+      "ring_fill": "#F2D5DC",
 
-      "panel_pill_bg": "rgba(22,36,22,0.09)",
-      "panel_pill_border": "rgba(22,36,22,0.12)",
-      "panel_pill_hover_bg": "rgba(22,36,22,0.16)",
+      "panel_pill_bg": "rgba(59,18,27,0.09)",
+      "panel_pill_border": "rgba(59,18,27,0.12)",
+      "panel_pill_hover_bg": "rgba(59,18,27,0.16)",
 
       "sidenav_bg": "#FFFFFF",
-      "sidenav_border": "rgba(22,36,22,0.10)",
-      "sidenav_text": "#162416",
-      "sidenav_text_muted": "rgba(22,36,22,0.45)",
-      "sidenav_active_bg": "rgba(22,36,22,0.10)"
+      "sidenav_border": "rgba(59,18,27,0.10)",
+      "sidenav_text": "#3B121B",
+      "sidenav_text_muted": "rgba(59,18,27,0.45)",
+      "sidenav_active_bg": "rgba(59,18,27,0.10)"
     },
 
     {
@@ -138,6 +141,7 @@ export const colorThemes = [
       "accent_2": "#7A9E6A",
       "accent_3": "#E8553D",
       "accent_4": "#5E9499",
+      "todo_accent": "#C8781A",
 
       "chart_colors": ["#C8781A", "#7A9E6A", "#E8553D", "#5E9499", "#9E6AA0", "#5A7EA0"],
 
@@ -157,5 +161,87 @@ export const colorThemes = [
       "sidenav_text": "#2A1E08",
       "sidenav_text_muted": "rgba(42,30,8,0.45)",
       "sidenav_active_bg": "rgba(42,30,8,0.10)"
+    },
+
+    {
+      "color_grp": 5,
+      "name": "Monochrome",
+      "description": "Minimalist black and white palette.",
+
+      "page_bg": "#FFFFFF",
+      "surface": "#F9F9F9",
+      "surface_raised": "#FFFFFF",
+      "border": "#EAEAEA",
+      "border_subtle": "#F0F0F0",
+
+      "text_primary": "#1A1A1A",
+      "text_secondary": "#555555",
+      "text_muted": "#888888",
+
+      "accent": "#1A1A1A",
+      "accent_2": "#404040",
+      "accent_3": "#666666",
+      "accent_4": "#888888",
+      "todo_accent": "#1A1A1A",
+
+      "chart_colors": ["#1A1A1A", "#404040", "#666666", "#888888", "#AAAAAA", "#CCCCCC"],
+
+      "button_bg": "#1A1A1A",
+      "button_text": "#FFFFFF",
+      "button_hover_bg": "#333333",
+
+      "ring_stroke": "#1A1A1A",
+      "ring_fill": "#F0F0F0",
+
+      "panel_pill_bg": "rgba(26,26,26,0.08)",
+      "panel_pill_border": "rgba(26,26,26,0.12)",
+      "panel_pill_hover_bg": "rgba(26,26,26,0.15)",
+
+      "sidenav_bg": "#FFFFFF",
+      "sidenav_border": "rgba(26,26,26,0.10)",
+      "sidenav_text": "#1A1A1A",
+      "sidenav_text_muted": "rgba(26,26,26,0.45)",
+      "sidenav_active_bg": "rgba(26,26,26,0.10)"
+    },
+
+    {
+      "color_grp": 6,
+      "name": "Obsidian Dark",
+      "description": "Sleek obsidian dark mode.",
+
+      "page_bg": "#0D0D0E",
+      "surface": "#161618",
+      "surface_raised": "#1C1C1F",
+      "border": "#2A2A2E",
+      "border_subtle": "#222226",
+
+      "text_primary": "#F3F3F5",
+      "text_secondary": "#A1A1AA",
+      "text_muted": "#71717A",
+
+      "accent": "#FFFFFF",
+      "accent_2": "#38BDF8",
+      "accent_3": "#F59E0B",
+      "accent_4": "#10B981",
+      "todo_accent": "#FFFFFF",
+
+      "chart_colors": ["#FFFFFF", "#38BDF8", "#F59E0B", "#10B981", "#A855F7", "#EC4899"],
+
+      "button_bg": "#FFFFFF",
+      "button_text": "#0D0D0E",
+      "button_hover_bg": "#E4E4E7",
+
+      "ring_stroke": "#FFFFFF",
+      "ring_fill": "#1C1C1F",
+
+      "panel_pill_bg": "rgba(255,255,255,0.10)",
+      "panel_pill_border": "rgba(255,255,255,0.15)",
+      "panel_pill_hover_bg": "rgba(255,255,255,0.20)",
+
+      "sidenav_bg": "#161618",
+      "sidenav_border": "rgba(255,255,255,0.10)",
+      "sidenav_text": "#F3F3F5",
+      "sidenav_text_muted": "rgba(255,255,255,0.45)",
+      "sidenav_active_bg": "rgba(255,255,255,0.12)"
     }
-]
+];
