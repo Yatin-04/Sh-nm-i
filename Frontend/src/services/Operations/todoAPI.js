@@ -41,3 +41,14 @@ export async function completeTodo(todoId , ) {
         throw error;
     }
 }
+// DELETE /todos/:todo_id → { message, todo }
+export async function deleteTodo(todoId) {
+    try {
+        const url = todoEndpoints.DELETE_USER_TODOS_API.replace(":todo_id", todoId);
+        const data = await apiConnector("DELETE", url);
+        return data.todo;
+    } catch (error) {
+        console.error("DELETE TODO ERROR:", error);
+        throw error;
+    }
+}

@@ -84,3 +84,14 @@ export const getUserTodosByDate = async (userId, targetDate) => {
   const { rows } = await query(sql, [userId, targetDate]);
   return rows;
 };
+
+// 6. Delete a todo by ID (scoped to user)
+export const deleteTodo = async (todoId, userId) => {
+  const sql = `
+    DELETE FROM todos
+    WHERE todo_id = $1 AND user_id = $2
+    RETURNING *;
+  `;
+  const { rows } = await query(sql, [todoId, userId]);
+  return rows[0]; // undefined if not found
+};

@@ -1,5 +1,5 @@
 
-import { insertTodo, getTodosByUserId, updateTodo, getUserTodosByDate } from '../models/todo.js';
+import { insertTodo, getTodosByUserId, updateTodo, getUserTodosByDate, deleteTodo as deleteTodoModel } from '../models/todo.js';
 import { updateUserStreak } from '../models/user.js';
 
 export const createTodo = async (req, res) => {
@@ -80,6 +80,19 @@ export const completeTodo = async (req, res) => {
     res.status(200).json({ todo: updated });
   } catch (error) {
     console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const deleteTodo = async (req, res) => {
+  try {
+    const { todo_id } = req.params;
+    const user_id = req.user.id;
+    const deleted = await deleteTodoModel(todo_id, user_id);
+    if (!deleted) return res.status(404).json({ error: 'Todo not found.' });
+    res.status(200).json({ message: 'Todo deleted successfully', todo: deleted });
+  } catch (error) {
+    console.error('Error deleting todo:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };

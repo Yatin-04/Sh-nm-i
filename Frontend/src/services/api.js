@@ -18,7 +18,8 @@ export const subjectEndpoints = {
 export const todoEndpoints = {
     GET_USER_TODOS_API:      BASE_URL + "/todos/",
     CREATE_USER_TODOS_API:   BASE_URL + "/todos/",
-    COMPLETE_USER_TODOS_API: BASE_URL + "/todos/:todo_id/complete"
+    COMPLETE_USER_TODOS_API: BASE_URL + "/todos/:todo_id/complete",
+    DELETE_USER_TODOS_API:   BASE_URL + "/todos/:todo_id"
 }
 
 // SESSIONS ENDPOINTS
