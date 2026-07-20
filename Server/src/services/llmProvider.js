@@ -86,14 +86,68 @@ async function groqChat(messages, tools) {
 // ─── Embeddings ─────────────────────────────────────────────────────────────
 
 export const generateEmbedding = async (text) => {
+    if (process.env.GEMINI_API_KEY) return await geminiEmbed([text]).then(r => r[0]);
     if (process.env.VOYAGE_API_KEY) return await voyageEmbed([text]).then(r => r[0]);
     return await ollamaEmbed(text);
 };
 
 export const generateEmbeddingBatch = async (texts) => {
+    if (process.env.GEMINI_API_KEY) return await geminiEmbed(texts);
     if (process.env.VOYAGE_API_KEY) return await voyageEmbed(texts);
     return await ollamaEmbedBatch(texts);
 };
+
+async function geminiEmbed(inputs) {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+        throw new Error("GEMINI_API_KEY is not set in environment variables.");
+    }
+
+    const rawModel = process.env.GEMINI_EMBED_MODEL || 'text-embedding-004';
+    const model = rawModel.startsWith('models/') ? rawModel : `models/${rawModel}`;
+
+    if (inputs.length === 1) {
+        const url = `https://generativelanguage.googleapis.com/v1beta/${model}:embedContent?key=${apiKey}`;
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                model,
+                content: { parts: [{ text: inputs[0] }] },
+                outputDimensionality: 512,
+            }),
+        });
+
+        if (!response.ok) {
+            const errText = await response.text();
+            throw new Error(`Gemini embed failed (${response.status}): ${errText}`);
+        }
+
+        const data = await response.json();
+        return [data.embedding.values];
+    } else {
+        const url = `https://generativelanguage.googleapis.com/v1beta/${model}:batchEmbedContents?key=${apiKey}`;
+        const requests = inputs.map((text) => ({
+            model,
+            content: { parts: [{ text }] },
+            outputDimensionality: 512,
+        }));
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ requests }),
+        });
+
+        if (!response.ok) {
+            const errText = await response.text();
+            throw new Error(`Gemini batch embed failed (${response.status}): ${errText}`);
+        }
+
+        const data = await response.json();
+        return data.embeddings.map((item) => item.values);
+    }
+}
 
 async function voyageEmbed(inputs) {
     let retries = 0;
