@@ -15,9 +15,14 @@ export default function ProtectedLayout() {
     const theme = colorThemes.find(t => t.color_grp === themeId) || colorThemes[0];
     const dispatch = useDispatch();
 
-     const handleLogout = () => {
-        // Clear auth state and redirect to login
-        dispatch(clearAuth());
+     const handleLogout = async () => {
+        try {
+            await logout();
+        } catch (error) {
+            console.error("Logout error:", error);
+        } finally {
+            dispatch(clearAuth());
+        }
     };
 
     const isIdle = true;
